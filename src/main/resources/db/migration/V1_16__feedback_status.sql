@@ -1,0 +1,1 @@
+CREATE TYPE feedback_status AS ENUM ('canceled', 'approved');
