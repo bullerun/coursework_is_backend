@@ -1,3 +1,4 @@
+
 spring:
     config:
         import: optional:file:.env[.properties]
@@ -17,6 +18,9 @@ spring:
         user: ${POSTGRES_USER:postgres}
         password: ${POSTGRES_PASSWORD:postgres}
         schemas: public
+    docker:
+        compose:
+            enabled: false
 
 security:
     jwt:

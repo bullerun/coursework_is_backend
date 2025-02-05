@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tender")
+@Table(name = "tender_history")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tender {
+public class TenderHistory {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false, updatable = false)
@@ -40,7 +40,7 @@ public class Tender {
     @MapsId("organizationID")
     private Organization organization;
 
-    @Column(name = "organization_id")
+    @Column(name = "organization_id", nullable = false)
     private UUID organizationID;
 
     @Column(name = "version", nullable = false, columnDefinition = "BIGINT DEFAULT 1")

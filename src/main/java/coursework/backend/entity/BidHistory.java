@@ -12,16 +12,20 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tender")
+@Table(name = "bid_history")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tender {
+public class BidHistory {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "bid_id", nullable = false)
+    private Bid bid;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,26 +33,33 @@ public class Tender {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tender_id", nullable = false)
+    @MapsId("tenderID")
+    private Tender tender;
+
+    @Column(name = "tender_id")
+    private UUID tenderID;
+
     @Column(name = "cost", nullable = false)
     private Double cost;
 
     @Column(name = "region", nullable = false)
     private String region;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
-    @MapsId("organizationID")
-    private Organization organization;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "author_type", nullable = false)
+    private AuthorType authorType;
 
-    @Column(name = "organization_id")
-    private UUID organizationID;
+    @Column(name = "author_id", nullable = false)
+    private UUID authorId;
 
     @Column(name = "version", nullable = false, columnDefinition = "BIGINT DEFAULT 1")
     private Long version;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tender_status", nullable = false)
-    private TenderStatus tenderStatus;
+    @Column(name = "bid_status", nullable = false)
+    private BidStatus bidStatus;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

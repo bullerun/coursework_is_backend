@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.postgresql:postgresql:42.7.2'
     implementation 'org.flywaydb:flyway-database-postgresql'
@@ -45,6 +46,8 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-api:0.12.5"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:0.12.5"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.12.5"
+
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
 }
 
 tasks.named('test') {

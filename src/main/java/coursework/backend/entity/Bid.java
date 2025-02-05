@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 
 @Entity
 @Table(name = "bid")
@@ -21,40 +21,51 @@ import java.util.UUID;
 public class Bid {
     @Id
     @GeneratedValue(generator = "UUID")
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "tender_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tender_id", nullable = false)
+    @MapsId("tenderID")
     private Tender tender;
 
+    @Column(name = "tender_id")
+    private UUID tenderID;
+
+    @Column(name = "cost", nullable = false)
+    private Double cost;
+
     @Column(nullable = false)
-    private BigDecimal cost;
+    private String region;
 
     @Enumerated(EnumType.STRING)
-    private Region region;
-
-    @Enumerated(EnumType.STRING)
+    @Column(name = "author_type", nullable = false)
     private AuthorType authorType;
 
-    @Column(nullable = false)
+    @Column(name = "author_id", nullable = false)
     private UUID authorId;
 
+    @Column(name = "version", nullable = false, columnDefinition = "BIGINT DEFAULT 1")
     private Long version;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "bid_status", nullable = false)
     private BidStatus bidStatus;
 
     @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
+    @Column(name = "expired_at")
     private LocalDateTime expiredAt;
 }
