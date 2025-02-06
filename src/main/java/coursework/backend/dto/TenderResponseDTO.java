@@ -11,7 +11,10 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class TenderRequestDTO {
+public class TenderResponseDTO {
+
+    @NotNull(message = "id тендера не может быть пустым")
+    private UUID id;
 
     @NotBlank(message = "Название тендера не может быть пустым")
     private String name;
@@ -113,4 +116,7 @@ public class TenderRequestDTO {
 
     @NotNull(message = "ID организации не может быть пустым")
     private UUID organizationId;
+
+    @NotNull(message = "ID создателя не может быть пустым")
+    private UUID ownerID;
 }

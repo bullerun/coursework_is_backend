@@ -7,6 +7,7 @@ import coursework.backend.dto.JwtAuthenticationResponse;
 import coursework.backend.dto.SignInRequest;
 import coursework.backend.dto.SignUpRequest;
 import coursework.backend.entity.User;
+import coursework.backend.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,10 +33,12 @@ public class AuthenticationService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid username or password.");
+            throw new ForbiddenException("Invalid username or password.");
         }
         var userDetails = userService.getByUsername(request.getUsername());
         var jwt = jwtService.generateToken(userDetails);
         return new JwtAuthenticationResponse(userDetails.getId(), userDetails.getUsername(), jwt, userDetails.getRole());
     }
+
+
 }

@@ -40,7 +40,6 @@ public class Tender {
     @MapsId("organizationID")
     private Organization organization;
 
-    @Column(name = "organization_id")
     private UUID organizationID;
 
     @Column(name = "version", nullable = false, columnDefinition = "BIGINT DEFAULT 1")

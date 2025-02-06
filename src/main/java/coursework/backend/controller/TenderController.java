@@ -2,6 +2,7 @@ package coursework.backend.controller;
 
 import coursework.backend.dto.ErrorResponse;
 import coursework.backend.dto.TenderRequestDTO;
+import coursework.backend.dto.TenderResponseDTO;
 import coursework.backend.entity.Tender;
 import coursework.backend.entity.TenderStatus;
 import coursework.backend.exception.ForbiddenException;
@@ -90,7 +91,7 @@ public class TenderController {
     @GetMapping("/my")
     @Operation(summary = "Get user tenders", description = "Retrieve tenders associated with a specific user")
     @ApiResponse(responseCode = "200", description = "List of user tenders retrieved")
-    public ResponseEntity<List<Tender>> getUserTenders() {
+    public ResponseEntity<List<TenderResponseDTO>> getUserTenders() {
         return ResponseEntity.ok(tenderService.getUserTenders());
     }
 
@@ -106,7 +107,7 @@ public class TenderController {
     @PutMapping("/{tenderId}/status")
     @Operation(summary = "Update tender status", description = "Update the status of a specific tender")
     @ApiResponse(responseCode = "200", description = "Tender status successfully updated")
-    public ResponseEntity<Tender> updateTenderStatus(
+    public ResponseEntity<TenderResponseDTO> updateTenderStatus(
             @Parameter(description = "ID of the tender to update")
             @PathVariable UUID tenderId,
             @Parameter(description = "New status for the tender")
@@ -117,7 +118,7 @@ public class TenderController {
     @PatchMapping("/{tenderId}/edit")
     @Operation(summary = "Edit a tender", description = "Edit the details of an existing tender")
     @ApiResponse(responseCode = "200", description = "Tender successfully edited")
-    public ResponseEntity<Tender> editTender(
+    public ResponseEntity<TenderResponseDTO> editTender(
             @Parameter(description = "ID of the tender to edit")
             @PathVariable UUID tenderId,
             @RequestBody TenderRequestDTO request) {
@@ -127,7 +128,7 @@ public class TenderController {
     @PutMapping("/{tenderId}/rollback/{version}")
     @Operation(summary = "Rollback a tender", description = "Rollback a tender to a previous version")
     @ApiResponse(responseCode = "200", description = "Tender successfully rolled back to previous version")
-    public ResponseEntity<Tender> rollbackTender(
+    public ResponseEntity<TenderResponseDTO> rollbackTender(
             @Parameter(description = "ID of the tender to rollback")
             @PathVariable UUID tenderId,
             @Parameter(description = "Version to rollback to")

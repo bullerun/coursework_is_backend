@@ -15,6 +15,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
+
     boolean existsByUsername(String username);
 
 
@@ -26,13 +27,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                         @Param("organizationUuid") UUID organizationUuid);
 
 
-
     @Query("SELECT COUNT(uo) > 0 FROM OrganisationEmployee uo " +
             "JOIN uo.employee u " +
             "JOIN uo.organisation o " +
             "WHERE u.username = :username AND o.id = :organizationUuid and uo.position = :position")
     boolean existsByUserAndOrganizationAndHasProvide(@Param("username") String username,
-                                                     @Param("organizationUuid") UUID organizationUuid, @Param("position")EmployeePositionInOrganization position);
+                                                     @Param("organizationUuid") UUID organizationUuid, @Param("position") EmployeePositionInOrganization position);
+
     @Modifying
     @Query("update User u set u.role = :role where u.id = :id")
     void updateRole(@Param("id") Long id, @Param("role") Role role);

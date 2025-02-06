@@ -2,10 +2,11 @@ package coursework.backend.service;
 
 
 import coursework.backend.dto.TenderRequestDTO;
+import coursework.backend.dto.TenderResponseDTO;
+import coursework.backend.dto.mapper.TenderMapper;
 import coursework.backend.entity.EmployeePositionInOrganization;
 import coursework.backend.entity.Tender;
 import coursework.backend.entity.TenderStatus;
-import coursework.backend.entity.User;
 import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
 import coursework.backend.repository.TenderRepository;
@@ -42,8 +43,11 @@ public class TenderService {
         return tenderRepository.save(tender);
     }
 
-    public List<Tender> getUserTenders() {
-        return tenderRepository.getTenderByUsersUsername(userService.getCurrentUserUsername());
+    public List<TenderResponseDTO> getUserTenders() {
+        return tenderRepository.getTenderByUsersUsername(userService.getCurrentUserUsername()).stream()
+                .map(TenderMapper::toDto)
+                .toList();
+
 
     }
 
@@ -51,25 +55,25 @@ public class TenderService {
         var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
                 () -> new NotFoundException("tender not found")
         );
-        if (tender.getTenderStatus() == TenderStatus.CREATED || !userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
+        if (tender.getTenderStatus() != TenderStatus.PUBLISHED && !userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
             throw new ForbiddenException("permission denied");
         }
         return tender.getTenderStatus().toString();
     }
 
 
-    public Tender updateTenderStatus(UUID tenderId, TenderStatus status) {
-        var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
+    public TenderResponseDTO updateTenderStatus(UUID tenderId, TenderStatus status) {
+        Tender tender = tenderRepository.getTenderById(tenderId).orElseThrow(
                 () -> new NotFoundException("tender not found")
         );
         if (!userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
             throw new ForbiddenException("permission denied");
         }
         tender.setTenderStatus(status);
-        return tenderRepository.save(tender);
+        return TenderMapper.toDto(tenderRepository.save(tender));
     }
 
-    public Tender editTender(UUID tenderId, TenderRequestDTO request) {
+    public TenderResponseDTO editTender(UUID tenderId, TenderRequestDTO request) {
         var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
                 () -> new NotFoundException("tender not found")
         );
@@ -85,14 +89,14 @@ public class TenderService {
                 .organizationID(request.getOrganizationId())
                 .ownerID(userService.getCurrentUser().getId())
                 .build();
-        return tenderRepository.save(newTender);
+        return TenderMapper.toDto(tenderRepository.save(newTender));
     }
 
 
     @Transactional
-    public Tender rollbackTender(UUID tenderId, long version) {
+    public TenderResponseDTO rollbackTender(UUID tenderId, long version) {
         // TODO Заглушка: логика отката версии еще не реализована
-        return tenderRepository.findById(tenderId)
-                .orElseThrow(() -> new NotFoundException("Tender not found"));
+        return TenderMapper.toDto(tenderRepository.findById(tenderId)
+                .orElseThrow(() -> new NotFoundException("Tender not found")));
     }
 }

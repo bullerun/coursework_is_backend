@@ -10,9 +10,9 @@ BEGIN
 END IF;
 
 INSERT INTO tender_history (tender_id, name, description, cost, region, organization_id, version, tender_status,
-                             created_at, updated_at, expired_at)
+                             created_at, updated_at, expired_at, owner_id)
 VALUES (OLD.id, OLD.name, OLD.description, OLD.cost, OLD.region, OLD.organization_id, OLD.version,
-        OLD.tender_status, NOW(), OLD.expired_at);
+        OLD.tender_status, NOW(), OLD.updated_at, OLD.expired_at, old.owner_id);
 
 NEW.version := OLD.version + 1;
 
