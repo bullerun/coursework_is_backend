@@ -42,7 +42,7 @@ public class BidHistory {
     private UUID tenderID;
 
     @Column(name = "cost", nullable = false)
-    private Double cost;
+    private Long cost;
 
     @Column(name = "region", nullable = false)
     private String region;

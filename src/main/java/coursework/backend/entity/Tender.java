@@ -30,7 +30,7 @@ public class Tender {
     private String description;
 
     @Column(name = "cost", nullable = false)
-    private Double cost;
+    private Long cost;
 
     @Column(name = "region", nullable = false)
     private String region;
@@ -44,7 +44,8 @@ public class Tender {
     private UUID organizationID;
 
     @Column(name = "version", nullable = false, columnDefinition = "BIGINT DEFAULT 1")
-    private Long version;
+    @Builder.Default
+    private Long version = 1L;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tender_status", nullable = false)
@@ -60,4 +61,12 @@ public class Tender {
 
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    @MapsId("ownerID")
+    private User owner;
+
+    @Column(name = "owner_id")
+    private UUID ownerID;
 }

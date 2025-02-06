@@ -4,6 +4,7 @@ package coursework.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Table(name = "organisation_employee")
 @Builder
 @Entity
@@ -22,7 +23,7 @@ public class OrganisationEmployee {
     @ManyToOne
     @MapsId("employeeId")
     @JoinColumn(name = "employee_id", nullable = false, foreignKey = @ForeignKey(name = "fk_organisation_employee_employee"))
-    private Employee employee;
+    private User employee;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "position", nullable = false)

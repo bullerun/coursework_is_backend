@@ -8,17 +8,17 @@ BEGIN
        OLD.bid_status = NEW.bid_status AND
        OLD.version = NEW.version THEN
         RETURN NEW;
-END IF;
+    END IF;
 
-INSERT INTO bid_history (bid_id, name, description, tender_id, cost, region, author_type, author_id, bid_status,
-                          version, updated_at, expired_at)
-VALUES (OLD.id, OLD.name, OLD.description, OLD.tender_id, OLD.cost, OLD.region, OLD.author_type, OLD.author_id,
-        OLD.bid_status, OLD.version,
-        NOW(), OLD.expired_at);
+    INSERT INTO bid_history (bid_id, name, description, tender_id, cost, region, author_type, author_id, bid_status,
+                             version, updated_at, expired_at)
+    VALUES (OLD.id, OLD.name, OLD.description, OLD.tender_id, OLD.cost, OLD.region, OLD.author_type, OLD.author_id,
+            OLD.bid_status, OLD.version,
+            NOW(), OLD.expired_at);
 
-NEW.version := OLD.version + 1;
+    NEW.version := OLD.version + 1;
 
-RETURN NEW;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -26,4 +26,4 @@ CREATE TRIGGER trigger_update_bid_version
     BEFORE UPDATE
     ON bid
     FOR EACH ROW
-    EXECUTE FUNCTION update_bid_version();
+EXECUTE FUNCTION update_bid_version();

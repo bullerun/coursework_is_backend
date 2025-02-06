@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS Bid
     name        TEXT        NOT NULL,
     description TEXT        NOT NULL,
     tender_id   UUID REFERENCES Tender (id),
-    cost        money      NOT NULL,
+    cost        BIGINT      NOT NULL,
     region      TEXT        NOT NULL CHECK (region IN ('Республика Адыгея',
                                                        'Республика Алтай',
                                                        'Республика Башкортостан',

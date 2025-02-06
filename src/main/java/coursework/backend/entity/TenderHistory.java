@@ -30,7 +30,7 @@ public class TenderHistory {
     private String description;
 
     @Column(name = "cost", nullable = false)
-    private Double cost;
+    private Long cost;
 
     @Column(name = "region", nullable = false)
     private String region;
@@ -60,4 +60,12 @@ public class TenderHistory {
 
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    @MapsId("ownerID")
+    private User owner;
+
+    @Column(name = "owner_id")
+    private UUID ownerID;
 }

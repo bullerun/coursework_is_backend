@@ -38,10 +38,11 @@ public class UserService {
         return this::getByUsername;
     }
 
-
+    public String getCurrentUserUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
     public User getCurrentUser() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByUsername(username);
+        return getByUsername(getCurrentUserUsername());
     }
 
     public UUID getCurrentUserId() {

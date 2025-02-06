@@ -20,8 +20,10 @@ import java.util.UUID;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
     private UUID id;
+
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
@@ -31,9 +33,6 @@ public class User implements UserDetails {
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
-
-    @Column(name = "salt", nullable = false)
-    private String salt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

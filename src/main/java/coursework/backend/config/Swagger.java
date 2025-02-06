@@ -2,6 +2,7 @@ package coursework.backend.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
                 description = "Sample API of the coursework",
                 version = "1.0.0"
         ),
+        security = @SecurityRequirement(name = "JWT"),
         servers = {
                 @Server(url = "http://localhost:11488", description = "Default Server URL")
         }

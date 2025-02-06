@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS Bid_history
     name        TEXT        NOT NULL,
     description TEXT        NOT NULL,
     tender_id   UUID REFERENCES Tender (id),
-    cost        money      NOT NULL,
+    cost        BIGINT      NOT NULL,
     region      TEXT        NOT NULL CHECK (region IN ('Республика Адыгея',
                                                        'Республика Алтай',
                                                        'Республика Башкортостан',
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS Bid_history
     author_type author_type NOT NULL,
     author_id   UUID        NOT NULL,
     version     BIGINT           DEFAULT 1,
-    bid_status bid_status  NOT NULL,
+    bid_status  bid_status  NOT NULL,
     created_at  TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP,
     expired_at  TIMESTAMP
