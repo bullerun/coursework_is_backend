@@ -17,10 +17,8 @@ import java.util.UUID;
 @Repository
 public interface TenderRepository extends JpaRepository<Tender, UUID> {
 
-    @NotNull Page<Tender> findAll(Pageable pageable);
     @Query("SELECT t FROM Tender t JOIN t.owner o WHERE o.username = :username")
     List<Tender> getTenderByUsersUsername(@Param("username") String username);
 
     Optional<Tender> getTenderById(UUID tenderId);
 }
-

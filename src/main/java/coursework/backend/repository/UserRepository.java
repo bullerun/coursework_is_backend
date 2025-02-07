@@ -19,11 +19,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
 
-    @Query("SELECT COUNT(uo) > 0 FROM OrganisationEmployee uo " +
+    @Query("SELECT COUNT(uo) = 0 FROM OrganisationEmployee uo " +
             "JOIN uo.employee u " +
             "JOIN uo.organisation o " +
             "WHERE u.username = :username AND o.id = :organizationUuid")
-    boolean existsByUserAndOrganization(@Param("username") String username,
+    boolean invertExistsByUserAndOrganization(@Param("username") String username,
                                               @Param("organizationUuid") UUID organizationUuid);
 
 
