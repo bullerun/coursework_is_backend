@@ -69,7 +69,7 @@ public class TenderService {
         var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
-        if (tender.getTenderStatus() != TenderStatus.PUBLISHED && userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
+        if (tender.getTenderStatus() != TenderStatus.PUBLISHED && !userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
             throw forbiddenException;
         }
         return tender.getTenderStatus().toString();
@@ -82,7 +82,7 @@ public class TenderService {
                 () -> notFoundException
         );
 
-        if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
+        if (!userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
 
             throw forbiddenException;
         }
@@ -96,7 +96,7 @@ public class TenderService {
         var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
-        if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
+        if (!userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
             throw new ForbiddenException("permission denied");
         }
         Tender newTender = Tender.builder()

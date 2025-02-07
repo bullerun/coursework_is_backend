@@ -2,9 +2,7 @@ package coursework.backend.dto.mapper;
 
 import coursework.backend.dto.BidResponseDTO;
 import coursework.backend.entity.Bid;
-import org.springframework.stereotype.Component;
 
-@Component
 public class BidMapper {
     private BidMapper() {
         throw new IllegalStateException("Utility class");
