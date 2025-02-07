@@ -42,6 +42,8 @@ public class TenderController {
 
     private final TenderService tenderService;
 
+    //TODO: !getTenders!,
+
     @GetMapping(value = "/ping", produces = MediaType.TEXT_PLAIN_VALUE)
     @Operation(summary = "Ping the server",
             description = "Checks if the server is up and running",
@@ -109,9 +111,16 @@ public class TenderController {
         return ResponseEntity.ok(tenderService.getTenderStatus(tenderId));
     }
 
-    @PutMapping("/{tenderId}/status")
-    @Operation(summary = "Update tender status", description = "Update the status of a specific tender")
-    @ApiResponse(responseCode = "200", description = "Tender status successfully updated")
+    @PutMapping(value = "/{tenderId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Update tender status",
+            description = "Update the status of a specific tender",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Tender status successfully updated", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Tender does not exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            }
+    )
     public ResponseEntity<TenderResponseDTO> updateTenderStatus(
             @Parameter(description = "ID of the tender to update")
             @PathVariable UUID tenderId,
@@ -120,9 +129,16 @@ public class TenderController {
         return ResponseEntity.ok(tenderService.updateTenderStatus(tenderId, status));
     }
 
-    @PatchMapping("/{tenderId}/edit")
-    @Operation(summary = "Edit a tender", description = "Edit the details of an existing tender")
-    @ApiResponse(responseCode = "200", description = "Tender successfully edited")
+    @PatchMapping(value = "/{tenderId}/edit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Edit a tender",
+            description = "Edit the details of an existing tender",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Tender successfully edited", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Tender does not exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            }
+    )
     public ResponseEntity<TenderResponseDTO> editTender(
             @Parameter(description = "ID of the tender to edit")
             @PathVariable UUID tenderId,
@@ -130,9 +146,16 @@ public class TenderController {
         return ResponseEntity.ok(tenderService.editTender(tenderId, request));
     }
 
-    @PutMapping("/{tenderId}/rollback/{version}")
-    @Operation(summary = "Rollback a tender", description = "Rollback a tender to a previous version")
-    @ApiResponse(responseCode = "200", description = "Tender successfully rolled back to previous version")
+    @PutMapping(value = "/{tenderId}/rollback/{version}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Rollback a tender",
+            description = "Rollback a tender to a previous version",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Tender successfully rolled back to previous version", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Tender does not exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
     public ResponseEntity<TenderResponseDTO> rollbackTender(
             @Parameter(description = "ID of the tender to rollback")
             @PathVariable UUID tenderId,
