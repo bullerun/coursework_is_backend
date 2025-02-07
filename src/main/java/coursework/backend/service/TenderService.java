@@ -34,7 +34,10 @@ public class TenderService {
 
     @Transactional
     public List<TenderResponseDTO> getTenders(Integer page, Integer pageSize, String sortDirection) {
-        var tenders = tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection))));
+        //TODO че тут за хуйня
+//        var tenders = tenderRepository.findAll(PageRequest.of(
+//                page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection))));
+        var tenders = tenderRepository.findAll();
         return tenders.stream().map(TenderMapper::toDto).toList();
     }
 
