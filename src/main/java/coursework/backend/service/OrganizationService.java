@@ -2,6 +2,7 @@ package coursework.backend.service;
 
 import coursework.backend.dto.OrganizationRequestDTO;
 import coursework.backend.entity.*;
+import coursework.backend.entity.enums.EmployeePositionInOrganization;
 import coursework.backend.repository.OrganisationEmployeeRepository;
 import coursework.backend.repository.OrganizationRepository;
 import jakarta.validation.Valid;

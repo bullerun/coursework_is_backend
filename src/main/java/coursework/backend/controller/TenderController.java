@@ -3,7 +3,7 @@ package coursework.backend.controller;
 import coursework.backend.dto.ErrorResponse;
 import coursework.backend.dto.TenderRequestDTO;
 import coursework.backend.dto.TenderResponseDTO;
-import coursework.backend.entity.TenderStatus;
+import coursework.backend.entity.enums.TenderStatus;
 import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
 import coursework.backend.exception.UnauthorizedException;

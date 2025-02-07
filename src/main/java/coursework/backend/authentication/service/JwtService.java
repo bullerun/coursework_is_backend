@@ -25,7 +25,7 @@ public class JwtService {
     @Value("${security.jwt.lifetime}")
     private long lifeTime;
 
-    private final MacAlgorithm alg = Jwts.SIG.HS256;
+    private static final MacAlgorithm alg = Jwts.SIG.HS256;
     private SecretKey key;
 
     @PostConstruct

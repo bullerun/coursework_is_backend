@@ -1,6 +1,6 @@
 package coursework.backend.dto;
 
-import coursework.backend.entity.Role;
+import coursework.backend.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

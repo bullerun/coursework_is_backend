@@ -1,7 +1,7 @@
 package coursework.backend.service;
 
 
-import coursework.backend.entity.Role;
+import coursework.backend.entity.enums.Role;
 import coursework.backend.entity.User;
 import coursework.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +22,9 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User create(User user) {
+    public User create(User user)  {
         if (repository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            throw new IllegalArgumentException("Пользователь с таким именем уже существует");
         }
         return save(user);
     }

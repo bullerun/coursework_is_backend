@@ -1,5 +1,7 @@
 package coursework.backend.entity;
 
+import coursework.backend.entity.enums.AuthorType;
+import coursework.backend.entity.enums.BidStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

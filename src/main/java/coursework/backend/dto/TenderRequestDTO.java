@@ -25,7 +25,7 @@ public class TenderRequestDTO {
 
     @NotBlank(message = "Регион не может быть пустым")
     @Pattern(regexp = """
-             Республика\\sАдыгея |
+            Республика\\sАдыгея |
              Республика\\sАлтай |
              Республика\\sБашкортостан |
              Республика\\sБурятия |
@@ -107,8 +107,7 @@ public class TenderRequestDTO {
              Ненецкий\\sАО |
              Ханты-Мансийский\\sАО |
              Чукотский\\sАО |
-             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS,
-            message = "Неверное название региона")
+             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Неверное название региона")
     private String region;
 
     @NotNull(message = "ID организации не может быть пустым")

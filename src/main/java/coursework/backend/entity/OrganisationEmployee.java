@@ -1,6 +1,7 @@
 package coursework.backend.entity;
 
 
+import coursework.backend.entity.enums.EmployeePositionInOrganization;
 import jakarta.persistence.*;
 import lombok.*;
 

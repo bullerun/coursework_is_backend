@@ -6,15 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BidMapper {
-    //    public static BidRequestDTO toDto(Bid bid) {
-//        BidRequestDTO bidRequestDTO = new BidRequestDTO();
-//        bidRequestDTO.setName(bid.getName());
-//        bidRequestDTO.setDescription(bid.getDescription());
-//        bid.setTenderID(bid.getTenderID());
-//        bid.setAuthorType(bid.getAuthorType());
-//        bid.setAuthorId(bid.getAuthorId());
-//        return bidRequestDTO;
-//    }
+    private BidMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static BidResponseDTO toDto(Bid bid) {
         return BidResponseDTO.builder()
                 .id(bid.getId())

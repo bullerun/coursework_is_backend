@@ -1,4 +1,4 @@
-package coursework.backend.entity;
+package coursework.backend.entity.enums;
 
 public enum BidStatus {
     CREATED,

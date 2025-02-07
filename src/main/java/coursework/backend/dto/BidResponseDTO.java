@@ -1,6 +1,6 @@
 package coursework.backend.dto;
 
-import coursework.backend.entity.AuthorType;
+import coursework.backend.entity.enums.AuthorType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
