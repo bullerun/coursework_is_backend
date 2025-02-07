@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/organizations")
 @RequiredArgsConstructor
 @SecurityScheme(
-        name = "bearerAuth",
+        name = "JWT",
         type = SecuritySchemeType.HTTP,
         scheme = "bearer",
         bearerFormat = "JWT"
@@ -37,7 +37,7 @@ public class OrganizationController {
     @Operation(
             summary = "Create a new organization",
             description = "Creates a new organization and assigns a unique identifier",
-            security = @SecurityRequirement(name = "bearerAuth"),
+            security = @SecurityRequirement(name = "JWT"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Organization successfully created",
                             content = @Content(schema = @Schema(implementation = Organization.class))),
