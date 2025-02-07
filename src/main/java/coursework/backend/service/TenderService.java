@@ -12,11 +12,14 @@ import coursework.backend.exception.NotFoundException;
 import coursework.backend.repository.TenderRepository;
 import coursework.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -27,7 +30,12 @@ public class TenderService {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    public Tender createTender(TenderRequestDTO request) {
+    public List<TenderResponseDTO> getTenders(Integer page, Integer pageSize, String sortDirection) {
+        var tenders = tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), "id")));
+        return tenders.stream().map(TenderMapper::toDto).collect(Collectors.toList());
+    }
+
+    public TenderResponseDTO createTender(TenderRequestDTO request) {
         if (!userRepository.existsByUserAndOrganizationAndHasProvide(userService.getCurrentUserUsername(), request.getOrganizationId(), EmployeePositionInOrganization.HEAD)) {
             throw new ForbiddenException("you can't create tender");
         }
@@ -40,7 +48,7 @@ public class TenderService {
                 .organizationID(request.getOrganizationId())
                 .ownerID(userService.getCurrentUser().getId())
                 .build();
-        return tenderRepository.save(tender);
+        return TenderMapper.toDto(tenderRepository.save(tender));
     }
 
     public List<TenderResponseDTO> getUserTenders() {
@@ -99,4 +107,5 @@ public class TenderService {
         return TenderMapper.toDto(tenderRepository.findById(tenderId)
                 .orElseThrow(() -> new NotFoundException("Tender not found")));
     }
+
 }

@@ -2,6 +2,9 @@ package coursework.backend.repository;
 
 
 import coursework.backend.entity.Tender;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +17,7 @@ import java.util.UUID;
 @Repository
 public interface TenderRepository extends JpaRepository<Tender, UUID> {
 
+    @NotNull Page<Tender> findAll(Pageable pageable);
     @Query("SELECT t FROM Tender t JOIN t.owner o WHERE o.username = :username")
     List<Tender> getTenderByUsersUsername(@Param("username") String username);
 

@@ -1,8 +1,11 @@
 package coursework.backend.dto;
 
+import coursework.backend.entity.AuthorType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.util.UUID;
 
 @Data
 public class BidRequestCreate {
@@ -13,11 +16,11 @@ public class BidRequestCreate {
     private String description;
 
     @NotNull(message = "Идентификатор тендера обязателен")
-    private Long tenderId;
+    private UUID tenderId;
 
     @NotNull(message = "Тип автора обязателен")
-    private String authorType;
+    private AuthorType authorType;
 
     @NotNull(message = "Идентификатор автора обязателен")
-    private Long authorId;
+    private UUID authorId;
 }

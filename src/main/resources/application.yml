@@ -1,36 +1,34 @@
-
 spring:
-    config:
-        import: optional:file:.env[.properties]
-    datasource:
-        name: ${POSTGRES_DB:postgres}
-        url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/${POSTGRES_DB:postgres}
-        username: ${POSTGRES_USER:postgres}
-        password: ${POSTGRES_PASSWORD:postgres}
-        driverClassName: org.postgresql.Driver
-    jpa:
-        show-sql:
-            true
-        hibernate:
-            ddl-auto: ${DDL_MODE:validate}
-    flyway:
-        url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/${POSTGRES_DB:postgres}
-        user: ${POSTGRES_USER:postgres}
-        password: ${POSTGRES_PASSWORD:postgres}
-        schemas: public
-    docker:
-        compose:
-            enabled: false
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    name: ${POSTGRES_DB:postgres}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/${POSTGRES_DB:postgres}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    driverClassName: org.postgresql.Driver
+  jpa:
+    show-sql:
+      true
+    hibernate:
+      ddl-auto: ${DDL_MODE:validate}
+  flyway:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/${POSTGRES_DB:postgres}
+    user: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    schemas: public
+  docker:
+    compose:
+      enabled: false
 
 security:
-    jwt:
-        secret: ${JWT_SECRET}
-        lifetime: ${JWT_TOKEN_LIFETIME}
+  jwt:
+    secret: ${JWT_SECRET}
+    lifetime: ${JWT_TOKEN_LIFETIME}
 
 server:
-    port: 11488
-#logging:
-#    level:
-#        com.jellyone.lab1: DEBUG
-#        org.springframework: INFO
-#        org.springframework.security: ERROR
+  port: 11488
+springdoc:
+  swagger-ui:
+    operationsSorter:
+      method

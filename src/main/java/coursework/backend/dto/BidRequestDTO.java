@@ -1,10 +1,11 @@
 package coursework.backend.dto;
 
+import coursework.backend.entity.AuthorType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class BidDTO {
+public class BidRequestDTO {
 
     @NotNull
     @Size(min = 1, max = 255)
@@ -18,8 +19,8 @@ public class BidDTO {
     private Long tenderId;
 
     @NotNull
-    @Pattern(regexp = "(COMPANY|INDIVIDUAL)")
-    private String authorType;
+    @Pattern(regexp = "(ORGANIZATION|EMPLOYEE)")
+    private AuthorType authorType;
 
     @NotNull
     private Long authorId;

@@ -3,7 +3,6 @@ package coursework.backend.controller;
 import coursework.backend.dto.ErrorResponse;
 import coursework.backend.dto.TenderRequestDTO;
 import coursework.backend.dto.TenderResponseDTO;
-import coursework.backend.entity.Tender;
 import coursework.backend.entity.TenderStatus;
 import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
@@ -19,6 +18,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,14 +49,18 @@ public class TenderController {
         return ResponseEntity.ok("ok");
     }
 
-//    @GetMapping
-//    @Operation(summary = "Get all tenders", description = "Retrieve a list of tenders, optionally filtered by service type")
-//    @ApiResponse(responseCode = "200", description = "List of tenders retrieved")
-//    public ResponseEntity<List<Tender>> getTenders(
-//            @Parameter(description = "List of service types to filter the tenders")
-//            @RequestParam(required = false) List<String> serviceType) {
-//        return ResponseEntity.ok(tenderService.getTenders(serviceType));
-//    }
+
+    @GetMapping
+    @Operation(summary = "Get all tenders", description = "Retrieve a list of tenders, optionally filtered by service type")
+    @ApiResponse(responseCode = "200", description = "List of tenders retrieved")
+    public ResponseEntity<List<TenderResponseDTO>> getTenders(
+            @RequestParam(defaultValue = "0", required = false) Integer page,
+            @RequestParam(defaultValue = "10", required = false) Integer pageSize,
+            @RequestParam(defaultValue = "asc", required = false)
+            @Pattern(regexp = "asc|desc", message = "sortDirection должен быть 'asc' или 'desc'") String sortDirection) {
+
+        return ResponseEntity.ok(tenderService.getTenders(page, pageSize, sortDirection));
+    }
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
@@ -64,28 +68,13 @@ public class TenderController {
             description = "Creates a new tender and assigns a unique identifier and creation time",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Tender successfully created", content = @Content(schema = @Schema(implementation = Tender.class))),
+                    @ApiResponse(responseCode = "200", description = "Tender successfully created", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))),
                     @ApiResponse(responseCode = "401", description = "User does not exist or is invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    public ResponseEntity<Tender> createTender(@RequestBody @Valid TenderRequestDTO request) {
+    public ResponseEntity<TenderResponseDTO> createTender(@RequestBody @Valid TenderRequestDTO request) {
         return ResponseEntity.ok(tenderService.createTender(request));
-    }
-
-
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Unauthorized", ex.getMessage()));
-    }
-
-    @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Forbidden", ex.getMessage()));
-    }
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Notfound", ex.getMessage()));
     }
 
     @GetMapping("/my")
@@ -134,5 +123,20 @@ public class TenderController {
             @Parameter(description = "Version to rollback to")
             @PathVariable long version) {
         return ResponseEntity.ok(tenderService.rollbackTender(tenderId, version));
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Unauthorized", ex.getMessage()));
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Forbidden", ex.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Notfound", ex.getMessage()));
     }
 }
