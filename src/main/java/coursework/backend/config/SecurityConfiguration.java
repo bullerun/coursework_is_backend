@@ -46,7 +46,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/tenders").permitAll()
-                        .requestMatchers("/bids").permitAll()
+                        .requestMatchers("/bid").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
                         .requestMatchers("admin/addToQueue").permitAll()
                         .anyRequest().authenticated())

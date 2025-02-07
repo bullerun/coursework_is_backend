@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "JOIN uo.employee u " +
             "JOIN uo.organisation o " +
             "WHERE u.username = :username AND o.id = :organizationUuid")
-    boolean invertExistsByUserAndOrganization(@Param("username") String username,
+    boolean existsByUserAndOrganization(@Param("username") String username,
                                               @Param("organizationUuid") UUID organizationUuid);
 
 
