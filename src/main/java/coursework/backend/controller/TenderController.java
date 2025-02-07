@@ -84,9 +84,16 @@ public class TenderController {
         return ResponseEntity.ok(tenderService.getUserTenders());
     }
 
-    @GetMapping("/{tenderId}/status")
-    @Operation(summary = "Get tender status", description = "Retrieve the current status of a specific tender")
-    @ApiResponse(responseCode = "200", description = "Tender status retrieved")
+    @GetMapping(value = "/{tenderId}/status", produces = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @Operation(summary = "Get tender status",
+            description = "Retrieve the current status of a specific tender",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Tender status retrieved", content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Tender does not exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            }
+    )
     public ResponseEntity<String> getTenderStatus(
             @Parameter(description = "ID of the tender to retrieve status for")
             @PathVariable UUID tenderId) {
