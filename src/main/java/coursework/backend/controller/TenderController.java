@@ -127,7 +127,7 @@ public class TenderController {
             @Parameter(description = "ID of the tender to update")
             @PathVariable UUID tenderId,
             @Parameter(description = "New status for the tender")
-            @RequestParam TenderStatus status) {
+            @RequestParam @Pattern(regexp = "CREATED|PUBLSHED|CLOSED|CANCELED", message = "Status has to be one of the four valid values") TenderStatus status) {
         return ResponseEntity.ok(tenderService.updateTenderStatus(tenderId, status));
     }
 
