@@ -2,6 +2,7 @@ package coursework.backend.controller;
 
 import coursework.backend.dto.BidRequestCreate;
 import coursework.backend.dto.BidResponseDTO;
+import coursework.backend.entity.enums.BidStatus;
 import coursework.backend.service.BidService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,16 @@ public class BidController {
                                                                  @RequestParam(defaultValue = "10", required = false) int pageSize) {
         List<BidResponseDTO> bids = bidService.getBidsForTender(tenderId, page, pageSize);
         return ResponseEntity.ok(bids);
+    }
+
+    @GetMapping("/{bidId}/status")
+    public ResponseEntity<BidStatus> getBidsStatus(@PathVariable UUID bidId) {
+        return ResponseEntity.ok(bidService.getBidsStatus(bidId));
+    }
+
+    @PutMapping("/{bidId}/status")
+    public ResponseEntity<BidResponseDTO> editBidsStatus(@PathVariable UUID bidId,
+                                                         @RequestParam BidStatus bidstatus) {
+        return ResponseEntity.ok(bidService.editBidsStatus(bidId, bidstatus));
     }
 }

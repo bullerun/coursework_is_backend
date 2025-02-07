@@ -11,6 +11,7 @@ import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
 import coursework.backend.repository.TenderRepository;
 import coursework.backend.repository.UserRepository;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -33,12 +34,8 @@ public class TenderService {
     private static final ForbiddenException forbiddenException = new ForbiddenException("permission denied");
 
     @Transactional
-    public List<TenderResponseDTO> getTenders(Integer page, Integer pageSize, String sortDirection) {
-        //TODO че тут за хуйня
-//        var tenders = tenderRepository.findAll(PageRequest.of(
-//                page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection))));
-        var tenders = tenderRepository.findAll();
-        return tenders.stream().map(TenderMapper::toDto).toList();
+    public List<TenderResponseDTO> getAllTenders(Integer page, Integer pageSize, @Pattern(regexp = "asc|desc", message = "sortDirection должен быть 'asc' или 'desc'") String sortDirection) {
+        return tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection)))).stream().map(TenderMapper::toDto).toList();
     }
 
     @Transactional
@@ -63,8 +60,6 @@ public class TenderService {
         return tenderRepository.getTenderByUsersUsername(userService.getCurrentUserUsername()).stream()
                 .map(TenderMapper::toDto)
                 .toList();
-
-
     }
 
     @Transactional
@@ -72,7 +67,7 @@ public class TenderService {
         var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
-        if (tender.getTenderStatus() != TenderStatus.PUBLISHED && !userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
+        if (tender.getTenderStatus() != TenderStatus.PUBLISHED && userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
             throw forbiddenException;
         }
         return tender.getTenderStatus().toString();
@@ -85,7 +80,7 @@ public class TenderService {
                 () -> notFoundException
         );
 
-        if (!userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
+        if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
 
             throw forbiddenException;
         }
@@ -99,8 +94,8 @@ public class TenderService {
         var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
-        if (!userRepository.existsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
-            throw new ForbiddenException("permission denied");
+        if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
+            throw forbiddenException;
         }
         Tender newTender = Tender.builder()
                 .name(request.getName())

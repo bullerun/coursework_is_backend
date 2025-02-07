@@ -56,15 +56,19 @@ public class TenderController {
 
 
     @GetMapping
-    @Operation(summary = "Get all tenders", description = "Retrieve a list of tenders, optionally filtered by service type")
-    @ApiResponse(responseCode = "200", description = "List of tenders retrieved")
+    @Operation(summary = "Get user tenders",
+            description = "Retrieve tenders associated with a specific user",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of tenders retrieved"),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
     public ResponseEntity<List<TenderResponseDTO>> getTenders(
             @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer pageSize,
             @RequestParam(defaultValue = "asc", required = false)
             @Pattern(regexp = "asc|desc", message = "sortDirection должен быть 'asc' или 'desc'") String sortDirection) {
-
-        return ResponseEntity.ok(tenderService.getTenders(page, pageSize, sortDirection));
+        return ResponseEntity.ok(tenderService.getAllTenders(page, pageSize, sortDirection));
     }
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

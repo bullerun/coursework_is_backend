@@ -12,6 +12,7 @@ public class BidMapper {
         return BidResponseDTO.builder()
                 .id(bid.getId())
                 .name(bid.getName())
+                .bidStatus(bid.getBidStatus())
                 .description(bid.getDescription())
                 .tenderId(bid.getTenderID())
                 .authorType(bid.getAuthorType())

@@ -1,6 +1,7 @@
 package coursework.backend.dto;
 
 import coursework.backend.entity.enums.AuthorType;
+import coursework.backend.entity.enums.BidStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -18,6 +19,10 @@ public class BidResponseDTO {
     @NotBlank
     @Size(min = 1, max = 255)
     private String name;
+
+    @NotNull
+    @Pattern(regexp = "(CREATED|PUBLISHED|CLOSED)")
+    private BidStatus bidStatus;
 
     @NotBlank
     @Size(min = 1, max = 1000)
