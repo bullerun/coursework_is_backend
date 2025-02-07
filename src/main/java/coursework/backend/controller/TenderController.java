@@ -42,9 +42,12 @@ public class TenderController {
 
     private final TenderService tenderService;
 
-    @GetMapping("/ping")
-    @Operation(summary = "Ping the server", description = "Checks if the server is up and running")
-    @ApiResponse(responseCode = "200", description = "Server is up")
+    @GetMapping(value = "/ping", produces = MediaType.TEXT_PLAIN_VALUE)
+    @Operation(summary = "Ping the server",
+            description = "Checks if the server is up and running",
+            security = @SecurityRequirement(name = "JWT")
+    )
+    @ApiResponse(responseCode = "200", description = "Server is up", content = @Content(schema = @Schema(implementation = String.class)))
     public ResponseEntity<String> ping() {
         return ResponseEntity.ok("ok");
     }
@@ -77,9 +80,15 @@ public class TenderController {
         return ResponseEntity.ok(tenderService.createTender(request));
     }
 
-    @GetMapping("/my")
-    @Operation(summary = "Get user tenders", description = "Retrieve tenders associated with a specific user")
-    @ApiResponse(responseCode = "200", description = "List of user tenders retrieved")
+    @GetMapping(value = "/my", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get user tenders",
+            description = "Retrieve tenders associated with a specific user",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of user tenders retrieved"),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
     public ResponseEntity<List<TenderResponseDTO>> getUserTenders() {
         return ResponseEntity.ok(tenderService.getUserTenders());
     }
