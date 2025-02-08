@@ -35,7 +35,7 @@ public class TenderService {
 
     @Transactional
     public List<TenderResponseDTO> getAllTenders(Integer page, Integer pageSize, @Pattern(regexp = "asc|desc", message = "sortDirection должен быть 'asc' или 'desc'") String sortDirection) {
-        return tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection)))).stream().map(TenderMapper::toDto).toList();
+        return tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), "createdAt"))).stream().map(TenderMapper::toDto).toList();
     }
 
     @Transactional

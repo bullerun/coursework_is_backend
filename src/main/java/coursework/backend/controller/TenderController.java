@@ -18,13 +18,17 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,30 +48,31 @@ public class TenderController {
 
     //TODO: !getTenders!,
 
-    @GetMapping(value = "/ping", produces = MediaType.TEXT_PLAIN_VALUE)
-    @Operation(summary = "Ping the server",
-            description = "Checks if the server is up and running",
-            security = @SecurityRequirement(name = "JWT")
-    )
-    @ApiResponse(responseCode = "200", description = "Server is up", content = @Content(schema = @Schema(implementation = String.class)))
-    public ResponseEntity<String> ping() {
-        return ResponseEntity.ok("ok");
-    }
+//    @GetMapping(value = "/ping", produces = MediaType.TEXT_PLAIN_VALUE)
+//    @Operation(summary = "Ping the server",
+//            description = "Checks if the server is up and running",
+//            security = @SecurityRequirement(name = "JWT")
+//    )
+//    @ApiResponse(responseCode = "200", description = "Server is up", content = @Content(schema = @Schema(implementation = String.class)))
+//    public ResponseEntity<String> ping() {
+//        return ResponseEntity.ok("ok");
+//    }
 
 
     @GetMapping
     @Operation(summary = "Get user tenders",
             description = "Retrieve tenders associated with a specific user",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "List of tenders retrieved"),
+                    @ApiResponse(responseCode = "200", description = "List of tenders retrieved", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))), // TODO
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<List<TenderResponseDTO>> getTenders(
-            @RequestParam(defaultValue = "0", required = false) Integer page,
-            @RequestParam(defaultValue = "10", required = false) Integer pageSize,
+            @RequestParam(defaultValue = "0", required = false) @Min(value = 0, message = "Page number can't be negative") Integer page,
+            @RequestParam(defaultValue = "10", required = false) @Min(value = 0, message = "Page size can't be negative") Integer pageSize,
             @RequestParam(defaultValue = "asc", required = false)
-            @Pattern(regexp = "asc|desc", message = "sortDirection должен быть 'asc' или 'desc'") String sortDirection) {
+            @Pattern(regexp = "asc|desc", message = "sortDirection should be 'asc' or 'desc'") String sortDirection) {
         return ResponseEntity.ok(tenderService.getAllTenders(page, pageSize, sortDirection));
     }
 
@@ -78,6 +83,7 @@ public class TenderController {
             security = @SecurityRequirement(name = "JWT"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Tender successfully created", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))), // TODO
                     @ApiResponse(responseCode = "401", description = "User does not exist or is invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
@@ -105,6 +111,7 @@ public class TenderController {
             security = @SecurityRequirement(name = "JWT"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Tender status retrieved", content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))), // TODO
                     @ApiResponse(responseCode = "401", description = "User does not exist or is invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "404", description = "Tender does not exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -122,6 +129,7 @@ public class TenderController {
             security = @SecurityRequirement(name = "JWT"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Tender status successfully updated", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = TenderResponseDTO.class))), // TODO
                     @ApiResponse(responseCode = "401", description = "User does not exist or is invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "404", description = "Tender does not exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -184,4 +192,33 @@ public class TenderController {
     public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Notfound", ex.getMessage()));
     }
+
+    @ExceptionHandler({HandlerMethodValidationException.class, MethodArgumentNotValidException.class})
+    public ResponseEntity<ErrorResponse> handleValidationException(Exception ex) {
+        StringBuilder fieldErrors = new StringBuilder();
+
+        if (ex instanceof MethodArgumentNotValidException validationEx) {
+            validationEx.getBindingResult().getFieldErrors().forEach(fieldError ->
+                    fieldErrors.append(fieldError.getField())
+                            .append(": ")
+                            .append(fieldError.getDefaultMessage())
+                            .append("\n")
+            );
+        } else if (ex instanceof HandlerMethodValidationException validationEx) {
+            validationEx.getParameterValidationResults().forEach(result ->
+                    result.getResolvableErrors().forEach(error -> {
+                        String field = (error.getCodes() != null && error.getCodes().length > 1)
+                                ? error.getCodes()[1].split("\\.")[1]
+                                : "unknownField";
+                        System.out.println(Arrays.toString(error.getCodes()));
+                        fieldErrors.append(field)
+                                .append(": ")
+                                .append(error.getDefaultMessage())
+                                .append("\n");
+                    })
+            );
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Validation failed", fieldErrors.toString().trim()));
+    }
+
 }
