@@ -1,26 +1,24 @@
 package coursework.backend.dto;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BidRequestEdit {
-    @NotBlank(message = "Название предложения не может быть пустым")
-    @Size(max = 255, message = "Название не должно превышать 255 символов")
+@Builder
+public class TenderRequestEdit {
+
+    @NotBlank(message = "Название тендера не может быть пустым")
     private String name;
 
-    @NotBlank(message = "Описание предложения не может быть пустым")
-    @Size(max = 1000, message = "Описание не должно превышать 1000 символов")
+    @NotBlank(message = "Описание тендера не может быть пустым")
     private String description;
 
-    @Min(value = 0, message = "цена не может быть отрицательной")
+    @NotNull(message = "Стоимость тендера должна быть указана")
+    @DecimalMin(value = "0.0", message = "Стоимость не может быть отрицательной")
     private Long cost;
 
     @NotBlank(message = "Регион не может быть пустым")
@@ -109,4 +107,5 @@ public class BidRequestEdit {
              Чукотский\\sАО |
              Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Неверное название региона")
     private String region;
+
 }

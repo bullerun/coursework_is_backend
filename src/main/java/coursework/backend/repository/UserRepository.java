@@ -38,4 +38,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User u set u.role = :role where u.id = :id")
     void updateRole(@Param("id") Long id, @Param("role") Role role);
 
+    @Query("SELECT COUNT(uo) > 0 FROM OrganisationEmployee uo " +
+            "JOIN uo.employee u " +
+            "JOIN uo.organisation o " +
+            "WHERE u.username = :username AND o.id = :organizationUuid")
+    boolean existsByUserAndOrganization(@Param("username") String username,
+                                        @Param("organizationUuid") UUID organizationUuid);
 }

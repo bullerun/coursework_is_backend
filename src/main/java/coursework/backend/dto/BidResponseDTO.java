@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -24,6 +25,8 @@ public class BidResponseDTO {
     @Pattern(regexp = "(CREATED|PUBLISHED|CLOSED)")
     private BidStatus bidStatus;
 
+    private Long version;
+
     @NotBlank
     @Size(min = 1, max = 1000)
     private String description;
@@ -37,5 +40,9 @@ public class BidResponseDTO {
 
     @NotNull
     private UUID authorId;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime expiredAt;
 }
 

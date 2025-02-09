@@ -25,9 +25,13 @@ public class BidHistory {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bid_id", nullable = false)
+    @MapsId("bidId")
     private Bid bid;
+
+    @Column(name = "bid_id")
+    private UUID bidId;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -73,4 +77,12 @@ public class BidHistory {
 
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    @MapsId("ownerID")
+    private User owner;
+
+    @Column(name = "owner_id")
+    private UUID ownerID;
 }

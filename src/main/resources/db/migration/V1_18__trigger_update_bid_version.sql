@@ -11,10 +11,9 @@ BEGIN
     END IF;
 
     INSERT INTO bid_history (bid_id, name, description, tender_id, cost, region, author_type, author_id, bid_status,
-                             version, updated_at, expired_at)
+                             version, updated_at, expired_at, owner_id)
     VALUES (OLD.id, OLD.name, OLD.description, OLD.tender_id, OLD.cost, OLD.region, OLD.author_type, OLD.author_id,
-            OLD.bid_status, OLD.version,
-            NOW(), OLD.expired_at);
+            OLD.bid_status, OLD.version,NOW(), OLD.expired_at, OLD.owner_id);
 
     NEW.version := OLD.version + 1;
 

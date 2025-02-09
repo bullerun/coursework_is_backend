@@ -24,6 +24,9 @@ public class TenderHistory {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
+    @Column(name = "tender_id")
+    private UUID tenderId;
+
     @Column(name = "name", nullable = false)
     private String name;
 

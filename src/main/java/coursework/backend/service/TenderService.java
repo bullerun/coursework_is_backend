@@ -2,6 +2,7 @@ package coursework.backend.service;
 
 
 import coursework.backend.dto.TenderRequestDTO;
+import coursework.backend.dto.TenderRequestEdit;
 import coursework.backend.dto.TenderResponseDTO;
 import coursework.backend.dto.mapper.TenderMapper;
 import coursework.backend.entity.Tender;
@@ -9,6 +10,7 @@ import coursework.backend.entity.enums.EmployeePositionInOrganization;
 import coursework.backend.entity.enums.TenderStatus;
 import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
+import coursework.backend.repository.TenderHistoryRepository;
 import coursework.backend.repository.TenderRepository;
 import coursework.backend.repository.UserRepository;
 import jakarta.validation.constraints.Pattern;
@@ -27,15 +29,16 @@ import java.util.UUID;
 public class TenderService {
 
     private final TenderRepository tenderRepository;
+    private final TenderHistoryRepository tenderHistoryRepository;
     private final UserRepository userRepository;
     private final UserService userService;
 
-    private static final NotFoundException notFoundException = new NotFoundException("user not found");
+    private static final NotFoundException notFoundException = new NotFoundException("not found");
     private static final ForbiddenException forbiddenException = new ForbiddenException("permission denied");
 
     @Transactional
     public List<TenderResponseDTO> getAllTenders(Integer page, Integer pageSize, @Pattern(regexp = "asc|desc", message = "sortDirection должен быть 'asc' или 'desc'") String sortDirection) {
-        return tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), "createdAt"))).stream().map(TenderMapper::toDto).toList();
+        return tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), "createdAt")), TenderStatus.PUBLISHED).stream().map(TenderMapper::toDto).toList();
     }
 
     @Transactional
@@ -90,31 +93,39 @@ public class TenderService {
     }
 
     @Transactional
-    public TenderResponseDTO editTender(UUID tenderId, TenderRequestDTO request) {
+    public TenderResponseDTO editTender(UUID tenderId, TenderRequestEdit request) {
         var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
         if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
             throw forbiddenException;
         }
-        Tender newTender = Tender.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .cost(request.getCost())
-                .region(request.getRegion().strip())
-                .tenderStatus(TenderStatus.CREATED)
-                .organizationID(request.getOrganizationId())
-                .ownerID(userService.getCurrentUser().getId())
-                .build();
-        return TenderMapper.toDto(tenderRepository.save(newTender));
+
+        tender.setName(request.getName());
+        tender.setDescription(request.getDescription());
+        tender.setCost(request.getCost());
+        tender.setRegion(request.getRegion().strip());
+
+        return TenderMapper.toDto(tenderRepository.save(tender));
     }
 
 
     @Transactional
     public TenderResponseDTO rollbackTender(UUID tenderId, long version) {
-        // TODO Заглушка: логика отката версии еще не реализована
-        return TenderMapper.toDto(tenderRepository.findById(tenderId)
-                .orElseThrow(() -> new NotFoundException("Tender not found")));
+        var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
+                () -> notFoundException
+        );
+        if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
+            throw forbiddenException;
+        }
+        if (tender.getVersion() < version) {
+            throw new IllegalArgumentException("this version doesn't exist");
+        }
+        var oldTender = tenderHistoryRepository.findByTenderIdAndVersion(tenderId, version).orElseThrow(
+                () -> new IllegalArgumentException("this version doesn't exist")
+        );
+        TenderMapper.historyToEntity(tender, oldTender);
+        return TenderMapper.toDto(tenderRepository.save(tender));
     }
 
 }

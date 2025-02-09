@@ -2,6 +2,7 @@ package coursework.backend.dto.mapper;
 
 import coursework.backend.dto.TenderResponseDTO;
 import coursework.backend.entity.Tender;
+import coursework.backend.entity.TenderHistory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,5 +18,14 @@ public class TenderMapper {
                 .organizationId(tender.getOrganizationID())
                 .ownerID(tender.getOwnerID())
                 .build();
+    }
+
+    public static void historyToEntity(Tender tender, TenderHistory tenderHistory) {
+        tender.setName(tenderHistory.getName());
+        tender.setDescription(tenderHistory.getDescription());
+        tender.setCost(tenderHistory.getCost());
+        tender.setRegion(tenderHistory.getRegion());
+        tender.setTenderStatus(tenderHistory.getTenderStatus());
+        tender.setExpiredAt(tenderHistory.getExpiredAt());
     }
 }

@@ -70,4 +70,12 @@ public class Bid {
 
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    @MapsId("ownerID")
+    private User owner;
+
+    @Column(name = "owner_id")
+    private UUID ownerID;
 }
