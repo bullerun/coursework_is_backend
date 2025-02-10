@@ -22,7 +22,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public JwtAuthenticationResponse signUp(SignUpRequest request) throws IllegalArgumentException {
+    public JwtAuthenticationResponse signUp(SignUpRequest request) {
         var user = User.builder().username(request.getUsername()).password(passwordEncoder.encode(request.getPassword())).email(request.getEmail()).build();
         user = userService.create(user);
         var jwt = jwtService.generateToken(user);

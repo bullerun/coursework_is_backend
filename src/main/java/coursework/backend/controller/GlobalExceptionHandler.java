@@ -8,13 +8,15 @@ import coursework.backend.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.Arrays;
 
-@RestControllerAdvice
+@ControllerAdvice
+@ResponseBody
 public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
@@ -31,31 +33,40 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Notfound", ex.getMessage()));
     }
 
-    @ExceptionHandler({HandlerMethodValidationException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity<ErrorResponse> handleValidationException(Exception ex) {
-        StringBuilder fieldErrors = new StringBuilder();
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleBadArgument(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("bad request", ex.getMessage()));
+    }
 
-        if (ex instanceof MethodArgumentNotValidException validationEx) {
-            validationEx.getBindingResult().getFieldErrors().forEach(fieldError ->
-                    fieldErrors.append(fieldError.getField())
-                            .append(": ")
-                            .append(fieldError.getDefaultMessage())
-                            .append("\n")
-            );
-        } else if (ex instanceof HandlerMethodValidationException validationEx) {
-            validationEx.getAllValidationResults().forEach(result ->
-                    result.getResolvableErrors().forEach(error -> {
-                        String field = (error.getCodes() != null && error.getCodes().length > 1)
-                                ? error.getCodes()[1].split("\\.")[1]
-                                : "unknownField";
-                        System.out.println(Arrays.toString(error.getCodes()));
-                        fieldErrors.append(field)
-                                .append(": ")
-                                .append(error.getDefaultMessage())
-                                .append("\n");
-                    })
-            );
-        }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException validationEx) {
+        StringBuilder fieldErrors = new StringBuilder();
+        validationEx.getBindingResult().getFieldErrors().forEach(fieldError ->
+                fieldErrors.append(fieldError.getField())
+                        .append(": ")
+                        .append(fieldError.getDefaultMessage())
+                        .append("\n")
+        );
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Validation failed", fieldErrors.toString().trim()));
     }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(HandlerMethodValidationException validationEx) {
+        StringBuilder fieldErrors = new StringBuilder();
+        validationEx.getAllValidationResults().forEach(result ->
+                result.getResolvableErrors().forEach(error -> {
+                    String field = (error.getCodes() != null && error.getCodes().length > 1)
+                            ? error.getCodes()[1].split("\\.")[1]
+                            : "unknownField";
+                    System.out.println(Arrays.toString(error.getCodes()));
+                    fieldErrors.append(field)
+                            .append(": ")
+                            .append(error.getDefaultMessage())
+                            .append("\n");
+                })
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Validation failed", fieldErrors.toString().trim()));
+    }
+
 }
