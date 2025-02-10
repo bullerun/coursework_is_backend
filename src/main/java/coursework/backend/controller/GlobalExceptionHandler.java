@@ -1,5 +1,6 @@
 package coursework.backend.controller;
 
+
 import coursework.backend.dto.ErrorResponse;
 import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
                             .append("\n")
             );
         } else if (ex instanceof HandlerMethodValidationException validationEx) {
-            validationEx.getParameterValidationResults().forEach(result ->
+            validationEx.getAllValidationResults().forEach(result ->
                     result.getResolvableErrors().forEach(error -> {
                         String field = (error.getCodes() != null && error.getCodes().length > 1)
                                 ? error.getCodes()[1].split("\\.")[1]

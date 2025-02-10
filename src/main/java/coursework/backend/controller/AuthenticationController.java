@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+
     @PostMapping("/register")
-    public JwtAuthenticationResponse signUp(@Valid @RequestBody SignUpRequest sign) throws IllegalArgumentException {
+    public JwtAuthenticationResponse signUp(@Valid @RequestBody SignUpRequest sign) {
         return authenticationService.signUp(sign);
     }
 

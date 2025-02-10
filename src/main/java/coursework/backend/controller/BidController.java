@@ -87,6 +87,7 @@ public class BidController {
     ) {
         return ResponseEntity.ok(bidService.editBid(bidId, bid));
     }
+
     @Operation(
             summary = "Rollback bid version",
             description = "Откатить параметры предложения к указанной версии. Это считается новой правкой, поэтому версия инкрементируется.",

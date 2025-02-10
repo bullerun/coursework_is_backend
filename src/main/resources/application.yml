@@ -17,7 +17,7 @@ spring:
     user: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     schemas: public
-    enabled: false
+#    enabled: false
   docker:
     compose:
       enabled: false
