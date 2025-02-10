@@ -2,7 +2,9 @@ package coursework.backend.controller;
 
 
 import coursework.backend.dto.ErrorResponse;
-import coursework.backend.dto.OrganizationRequestDTO;
+import coursework.backend.dto.OrganizationInvitesResponse;
+import coursework.backend.dto.organization.InviteRequest;
+import coursework.backend.dto.organization.OrganizationRequestDTO;
 import coursework.backend.entity.Organization;
 import coursework.backend.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,10 +17,10 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/organizations")
@@ -50,5 +52,35 @@ public class OrganizationController {
     public ResponseEntity<Organization> createOrganization(@RequestBody @Valid OrganizationRequestDTO request) {
         return ResponseEntity.ok(organizationService.createOrganization(request));
     }
+
+
+    @PostMapping("/invite/add")
+    public ResponseEntity<String> addEmployee(@RequestBody @Valid InviteRequest request) {
+        organizationService.createOrganizationInvite(request);
+        return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/invite/{invitationId}/accept")
+    public ResponseEntity<String> acceptInvitation(@PathVariable UUID invitationId) {
+        organizationService.acceptInvite(invitationId);
+        return ResponseEntity.ok("Приглашение принято");
+    }
+
+    @PostMapping("/invite/{invitationId}/reject")
+    public ResponseEntity<String> rejectInvitation(@PathVariable UUID invitationId) {
+        organizationService.declineInvite(invitationId);
+        return ResponseEntity.ok("Приглашение отклонено");
+    }
+
+    @GetMapping("/invite/myInvitations")
+    public ResponseEntity<List<OrganizationInvitesResponse>> myInvitations() {
+        return ResponseEntity.ok(organizationService.getMyInvitations());
+    }
+
+    @GetMapping("/invite/myInvite")
+    public ResponseEntity<List<OrganizationInvitesResponse>> iInvite() {
+        return ResponseEntity.ok(organizationService.getMyInvites());
+    }
+
 }
 

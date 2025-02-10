@@ -84,7 +84,6 @@ public class TenderService {
         );
 
         if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
-
             throw forbiddenException;
         }
 

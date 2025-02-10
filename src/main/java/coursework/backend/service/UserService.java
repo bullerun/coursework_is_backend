@@ -1,8 +1,9 @@
 package coursework.backend.service;
 
 
-import coursework.backend.entity.enums.Role;
 import coursework.backend.entity.User;
+import coursework.backend.entity.enums.Role;
+import coursework.backend.exception.NotFoundException;
 import coursework.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,12 +18,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
+    private final UserRepository userRepository;
 
     public User save(User user) {
         return repository.save(user);
     }
 
-    public User create(User user)  {
+    public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("Пользователь с таким именем уже существует");
         }
@@ -41,8 +43,15 @@ public class UserService {
     public String getCurrentUserUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
+
     public User getCurrentUser() {
         return getByUsername(getCurrentUserUsername());
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("user not found")
+        );
     }
 
     public UUID getCurrentUserId() {
