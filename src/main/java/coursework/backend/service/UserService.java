@@ -7,8 +7,8 @@ import coursework.backend.exception.NotFoundException;
 import coursework.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -32,7 +32,7 @@ public class UserService {
     }
 
     public User getByUsername(String username) {
-        return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        return repository.findByUsername(username).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
     }
 
@@ -41,7 +41,9 @@ public class UserService {
     }
 
     public String getCurrentUserUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+        var UserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(UserDetails.toString());
+        return ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
     }
 
     public User getCurrentUser() {
@@ -58,11 +60,16 @@ public class UserService {
         return getCurrentUser().getId();
     }
 
-    public void setAdmin(Long id) {
-        repository.updateRole(id, Role.ROLE_ADMIN);
+    public void setRole(UUID id, Role role) {
+        repository.updateRole(id, role);
     }
 
-    public void removeAdmin(Long id) {
+    public void removeAdmin(UUID id) {
         repository.updateRole(id, Role.ROLE_USER);
+    }
+
+    public User findById(UUID userId) {
+        return repository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+
     }
 }
