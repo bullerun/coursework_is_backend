@@ -72,7 +72,6 @@ public class OrganizationService {
         inviteRepository.save(invite);
 
         Organization organization = getOrganizationById(invite.getOrganizationId());
-        // Логика добавления пользователя в организацию
         OrganisationEmployee organisationEmployee = OrganisationEmployee.builder()
                 .id(new OrganisationEmployeeId(organization.getId(), invite.getReceiver().getId()))
                 .employee(invite.getReceiver()).organisation(organization)

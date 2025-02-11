@@ -110,7 +110,7 @@ public class BidRequestCreate {
     @NotNull(message = "Идентификатор тендера обязателен")
     private UUID tenderId;
 
-
+    @NotNull(message = "предположительные сроки выполнения")
     private LocalDateTime expiredAt;
 
     @NotNull(message = "Тип автора обязателен")

@@ -111,4 +111,5 @@ public class BidController {
     ) {
         return ResponseEntity.ok(bidService.rollbackBid(bidId, version));
     }
+
 }

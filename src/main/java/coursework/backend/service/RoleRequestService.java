@@ -9,6 +9,7 @@ import coursework.backend.exception.RoleRequestConflictException;
 import coursework.backend.repository.RoleRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,7 @@ public class RoleRequestService {
     private final RoleRequestRepository roleRequestRepository;
     private final UserService userService;
 
+    @Transactional
     public void requestRoleChange(Role requestedRole) {
         User user = userService.getCurrentUser();
         System.out.println(user.getUsername());
@@ -35,6 +37,7 @@ public class RoleRequestService {
         roleRequestRepository.save(request);
     }
 
+    @Transactional
     public void approveRoleRequest(UUID requestId) {
         RoleRequest request = roleRequestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Запрос не найден"));
@@ -45,6 +48,7 @@ public class RoleRequestService {
         userService.setRole(request.getUserId(), request.getRequestedRole());
     }
 
+    @Transactional
     public void rejectRoleRequest(UUID requestId) {
         RoleRequest request = roleRequestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Запрос не найден"));
@@ -54,6 +58,7 @@ public class RoleRequestService {
         roleRequestRepository.save(request);
     }
 
+    @Transactional
     public List<RoleRequest> getPendingRequests() {
         return roleRequestRepository.findByStatus(RequestStatus.PENDING);
     }

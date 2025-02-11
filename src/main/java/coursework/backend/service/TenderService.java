@@ -53,6 +53,7 @@ public class TenderService {
                 .region(request.getRegion().strip())
                 .tenderStatus(TenderStatus.CREATED)
                 .organizationID(request.getOrganizationId())
+                .expiredAt(request.getExpiredAt())
                 .ownerID(userService.getCurrentUser().getId())
                 .build();
         return TenderMapper.toDto(tenderRepository.save(tender));

@@ -27,8 +27,8 @@ public interface BidRepository extends JpaRepository<Bid, UUID> {
             Pageable pageable
     );
 
-    @Query("SELECT b FROM Bid b WHERE b.id = :id")
-    Optional<Bid> getBidsById(@Param("id") UUID id);
+    Optional<Bid> getBidsByIdAndBidStatusNot(UUID id, BidStatus bidStatus);
+
 
     @Query("SELECT b FROM Bid b JOIN b.owner u " +
             "WHERE u.username = :username OR " +
@@ -36,8 +36,24 @@ public interface BidRepository extends JpaRepository<Bid, UUID> {
             "b.authorId IN (SELECT o.organisation.id FROM OrganisationEmployee o WHERE o.employee.username = :username))")
     List<Bid> getUserBids(@Param("username") String username, @Param("authorType") AuthorType authorType);
 
-    @Query("SELECT COUNT(b) > 0 FROM Bid b " +
-            "WHERE b.authorType = :authorType AND " +
-            "b.authorId IN (SELECT o.organisation.id FROM OrganisationEmployee o WHERE o.employee.username = :username)")
-    boolean checkUserPermissionsIfAuthorIsOrganization(@Param("username") String username, @Param("authorType") AuthorType authorType);
+//    @Query("SELECT COUNT(b) > 0 FROM Bid b " +
+//            "WHERE b.authorType = :authorType AND " +
+//            "b.authorId IN (SELECT o.organisation.id FROM OrganisationEmployee o WHERE o.employee.username = :username)")
+//    Optional<Bid> getBidsById(UUID bidId);
+
+    @Query("""
+                SELECT b FROM Bid b
+                WHERE b.id = :bidId
+                AND (
+                    (b.authorType = 'EMPLOYEE' AND b.ownerID = :userId)
+                    OR (b.authorType = 'ORGANIZATION' AND EXISTS (
+                        SELECT 1 FROM OrganisationEmployee uo
+                                    JOIN uo.employee u
+                                    JOIN uo.organisation o
+                                    WHERE u.id = :userId AND o.id = b.authorId
+                    ))
+                )
+            """)
+    Optional<Bid> findBidWithPermission(@Param("bidId") UUID bidId, @Param("userId") UUID userId);
+
 }

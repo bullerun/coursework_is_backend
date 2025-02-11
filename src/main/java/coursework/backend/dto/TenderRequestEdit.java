@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class TenderRequestEdit {
@@ -108,4 +110,6 @@ public class TenderRequestEdit {
              Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Неверное название региона")
     private String region;
 
+    @NotNull(message = "сроки выполнения")
+    private LocalDateTime expiredAt;
 }

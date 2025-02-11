@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -112,4 +113,7 @@ public class TenderRequestDTO {
 
     @NotNull(message = "ID организации не может быть пустым")
     private UUID organizationId;
+
+    @NotNull(message = "сроки выполнения")
+    private LocalDateTime expiredAt;
 }

@@ -72,4 +72,8 @@ public class UserService {
         return repository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
     }
+
+    public boolean isUserInOrganization(String username, UUID organization) {
+        return repository.existsByUserAndOrganization(username, organization);
+    }
 }

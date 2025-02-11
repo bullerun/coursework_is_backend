@@ -17,6 +17,7 @@ public class TenderMapper {
                 .region(tender.getRegion().strip())
                 .organizationId(tender.getOrganizationID())
                 .ownerID(tender.getOwnerID())
+                .expiredAt(tender.getExpiredAt())
                 .build();
     }
 

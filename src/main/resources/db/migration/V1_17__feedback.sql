@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS feedback
     bid_id          uuid REFERENCES Bid (id),
     description     TEXT            NOT NULL,
     organisation_id UUID REFERENCES Organization (id),
-    feedback_status feedback_status NOT NULL,
+    feedback_status TEXT NOT NULL CHECK ( feedback_status IN ('CANCELED', 'APPROVED')),
     created_at      TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );

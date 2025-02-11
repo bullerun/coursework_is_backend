@@ -1,8 +1,12 @@
 package coursework.backend.dto;
 
 import coursework.backend.entity.enums.AuthorType;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 public class BidRequestDTO {
@@ -24,4 +28,9 @@ public class BidRequestDTO {
 
     @NotNull
     private Long authorId;
+
+    @NotNull(message = "предположительные сроки выполнения")
+    private LocalDateTime expiredAt;
+
+
 }
