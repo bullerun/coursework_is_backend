@@ -10,6 +10,7 @@ import coursework.backend.entity.Organization;
 import coursework.backend.entity.enums.AuthorType;
 import coursework.backend.entity.enums.BidStatus;
 import coursework.backend.entity.enums.FeedbackStatus;
+import coursework.backend.entity.enums.TenderStatus;
 import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
 import coursework.backend.repository.*;
@@ -33,37 +34,37 @@ public class BidService {
     private final BidHistoryRepository bidHistoryRepository;
     private final FeedbackRepository feedbackRepository;
     private final OrganizationRepository organizationRepository;
+    private final TenderRepository tenderRepository;
 
 
     @Transactional
     public BidResponseDTO createBid(BidRequestCreate request) {
+        tenderRepository.findTenderByIdAndTenderStatus(request.getTenderId(), TenderStatus.PUBLISHED).orElseThrow(
+                () -> new NotFoundException("Tender not found")
+        );
+        UUID ownerId = userService.getCurrentUser().getId();
 
-        UUID userID = null;
-        Bid bid = new Bid();
-        bid.setName(request.getName());
-        bid.setDescription(request.getDescription());
-        bid.setCost(request.getCost());
-        bid.setRegion(request.getRegion());
-        bid.setBidStatus(BidStatus.CREATED);
-        bid.setTenderID(request.getTenderId());
-        bid.setAuthorType(request.getAuthorType());
-        bid.setAuthorId(request.getAuthorId());
         if (request.getAuthorType() == AuthorType.ORGANIZATION) {
-            organizationRepository.findById(request.getAuthorId()).orElseThrow(
-                    () -> new NotFoundException("Organization not found")
-            );
+            organizationRepository.findById(request.getAuthorId())
+                    .orElseThrow(() -> new NotFoundException("Organization not found"));
         } else if (request.getAuthorType() == AuthorType.EMPLOYEE) {
-            userID = userService.getCurrentUser().getId();
-            bid.setAuthorId(request.getAuthorId());
+            ownerId = request.getAuthorId();
         }
-        if (userID == null) {
-            bid.setOwnerID(userService.getCurrentUser().getId());
-        } else {
-            bid.setOwnerID(userID);
-        }
-        bid.setExpiredAt(request.getExpiredAt());
-        bid = bidRepository.save(bid);
-        return BidMapper.toDto(bid);
+
+        Bid bid = Bid.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .cost(request.getCost())
+                .region(request.getRegion())
+                .bidStatus(BidStatus.CREATED)
+                .tenderID(request.getTenderId())
+                .authorType(request.getAuthorType())
+                .authorId(request.getAuthorId())
+                .ownerID(ownerId)
+                .expiredAt(request.getExpiredAt())
+                .build();
+
+        return BidMapper.toDto(bidRepository.save(bid));
     }
 
     @Transactional
@@ -159,5 +160,4 @@ public class BidService {
                 .map(FeedbackMapper::toDto)
                 .toList();
     }
-
 }

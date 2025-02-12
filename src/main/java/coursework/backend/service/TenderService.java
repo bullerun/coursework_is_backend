@@ -68,7 +68,7 @@ public class TenderService {
 
     @Transactional
     public String getTenderStatus(UUID tenderId) {
-        var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
+        var tender = tenderRepository.findTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
         if (tender.getTenderStatus() != TenderStatus.PUBLISHED && userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
@@ -80,7 +80,7 @@ public class TenderService {
 
     @Transactional
     public TenderResponseDTO updateTenderStatus(UUID tenderId, TenderStatus status) {
-        Tender tender = tenderRepository.getTenderById(tenderId).orElseThrow(
+        Tender tender = tenderRepository.findTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
 
@@ -94,7 +94,7 @@ public class TenderService {
 
     @Transactional
     public TenderResponseDTO editTender(UUID tenderId, TenderRequestEdit request) {
-        var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
+        var tender = tenderRepository.findTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
         if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {
@@ -112,7 +112,7 @@ public class TenderService {
 
     @Transactional
     public TenderResponseDTO rollbackTender(UUID tenderId, long version) {
-        var tender = tenderRepository.getTenderById(tenderId).orElseThrow(
+        var tender = tenderRepository.findTenderById(tenderId).orElseThrow(
                 () -> notFoundException
         );
         if (userRepository.invertExistsByUserAndOrganization(userService.getCurrentUserUsername(), tender.getOrganizationID())) {

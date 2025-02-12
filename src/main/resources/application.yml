@@ -17,16 +17,15 @@ spring:
     user: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     schemas: public
-    enabled: false
-  docker:
-    compose:
-      enabled: false
-
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 security:
   jwt:
     secret: ${JWT_SECRET}
     lifetime: ${JWT_TOKEN_LIFETIME}
-
 server:
   port: 11488
 springdoc:

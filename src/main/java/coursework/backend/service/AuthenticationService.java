@@ -21,12 +21,13 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-
+    private final KafkaProducerService kafkaProducerService;
     @Transactional
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
         var user = User.builder().username(request.getUsername()).password(passwordEncoder.encode(request.getPassword())).email(request.getEmail()).build();
         user = userService.create(user);
         var jwt = jwtService.generateToken(user);
+        kafkaProducerService.sendLog("Пользователь зарегистрирован: " + user.getUsername());
         return new JwtAuthenticationResponse(user.getId(), user.getUsername(), jwt, user.getRole());
     }
 
@@ -39,6 +40,7 @@ public class AuthenticationService {
         }
         var userDetails = userService.getByUsername(request.getUsername());
         var jwt = jwtService.generateToken(userDetails);
+        kafkaProducerService.sendLog("Пользователь вошел в систему: " + userDetails.getUsername());
         return new JwtAuthenticationResponse(userDetails.getId(), userDetails.getUsername(), jwt, userDetails.getRole());
     }
 

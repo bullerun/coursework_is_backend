@@ -40,5 +40,6 @@ public class Feedback {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }

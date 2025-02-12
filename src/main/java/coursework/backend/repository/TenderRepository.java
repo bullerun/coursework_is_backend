@@ -20,7 +20,8 @@ public interface TenderRepository extends JpaRepository<Tender, UUID> {
     @Query("SELECT t FROM Tender t JOIN t.owner o WHERE o.username = :username")
     List<Tender> getTenderByUsersUsername(@Param("username") String username);
 
-    Optional<Tender> getTenderById(UUID tenderId);
+    Optional<Tender> findTenderById(UUID id);
+    Optional<Tender> findTenderByIdAndTenderStatus(UUID id, TenderStatus status);
 
     @Query("SELECT t FROM Tender t WHERE t.tenderStatus = :tenderStatus")
     List<Tender> findAll(@NotNull Pageable pageable, TenderStatus tenderStatus);
