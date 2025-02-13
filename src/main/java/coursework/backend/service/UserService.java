@@ -19,6 +19,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository repository;
     private final UserRepository userRepository;
+    private final KafkaProducerService kafkaProducerService;
 
     public User save(User user) {
         return repository.save(user);
@@ -28,7 +29,9 @@ public class UserService {
         if (repository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("User with this username already exists.");
         }
-        return save(user);
+        user = save(user);
+        kafkaProducerService.sendLog("User created: " + user);
+        return user;
     }
 
     public User getByUsername(String username) {
@@ -62,10 +65,12 @@ public class UserService {
 
     public void setRole(UUID id, Role role) {
         repository.updateRole(id, role);
+        kafkaProducerService.sendLog("User " + id + " role updated to " + role);
     }
 
     public void removeAdmin(UUID id) {
         repository.updateRole(id, Role.ROLE_USER);
+        kafkaProducerService.sendLog("User " + id + " admin role removed");
     }
 
     public User findById(UUID userId) {

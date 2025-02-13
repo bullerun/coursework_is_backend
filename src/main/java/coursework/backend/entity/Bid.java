@@ -3,10 +3,7 @@ package coursework.backend.entity;
 import coursework.backend.entity.enums.AuthorType;
 import coursework.backend.entity.enums.BidStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -20,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Bid {
     @Id
     @GeneratedValue(generator = "UUID")

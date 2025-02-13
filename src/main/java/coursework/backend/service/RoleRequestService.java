@@ -21,6 +21,7 @@ public class RoleRequestService {
 
     private final RoleRequestRepository roleRequestRepository;
     private final UserService userService;
+    private final KafkaProducerService kafkaProducerService;
 
     @Transactional
     public void requestRoleChange(Role requestedRole) {
@@ -34,7 +35,8 @@ public class RoleRequestService {
         request.setUserId(user.getId());
         request.setRequestedRole(requestedRole);
         request.setStatus(RequestStatus.PENDING);
-        roleRequestRepository.save(request);
+        request = roleRequestRepository.save(request);
+        kafkaProducerService.sendLog("RoleRequest created: " + request);
     }
 
     @Transactional
@@ -43,9 +45,11 @@ public class RoleRequestService {
                 .orElseThrow(() -> new NotFoundException("Request not found"));
 
         request.setStatus(RequestStatus.APPROVED);
-        roleRequestRepository.save(request);
+        request = roleRequestRepository.save(request);
+        kafkaProducerService.sendLog("RoleRequest approved: " + request);
 
         userService.setRole(request.getUserId(), request.getRequestedRole());
+        kafkaProducerService.sendLog("User " + request.getUserId() + " updated to " + request.getRequestedRole());
     }
 
     @Transactional
@@ -55,7 +59,8 @@ public class RoleRequestService {
 
 
         request.setStatus(RequestStatus.REJECTED);
-        roleRequestRepository.save(request);
+        request = roleRequestRepository.save(request);
+        kafkaProducerService.sendLog("RoleRequest rejected: " + request);
     }
 
     @Transactional

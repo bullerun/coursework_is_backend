@@ -35,7 +35,7 @@ public class BidService {
     private final FeedbackRepository feedbackRepository;
     private final OrganizationRepository organizationRepository;
     private final TenderRepository tenderRepository;
-
+    private final KafkaProducerService kafkaProducerService;
 
     @Transactional
     public BidResponseDTO createBid(BidRequestCreate request) {
@@ -64,7 +64,9 @@ public class BidService {
                 .expiredAt(request.getExpiredAt())
                 .build();
 
-        return BidMapper.toDto(bidRepository.save(bid));
+        bid = bidRepository.save(bid);
+        kafkaProducerService.sendLog("Bid created: " + bid);
+        return BidMapper.toDto(bid);
     }
 
     @Transactional
@@ -91,7 +93,9 @@ public class BidService {
     public BidResponseDTO editBidsStatus(UUID bidId, BidStatus bidStatus) {
         var bid = getBidWithPermission(bidId);
         bid.setBidStatus(bidStatus);
-        return BidMapper.toDto(bidRepository.save(bid));
+        bid = bidRepository.save(bid);
+        kafkaProducerService.sendLog("Bid updated: " + bid);
+        return BidMapper.toDto(bid);
     }
 
     @Transactional
@@ -101,7 +105,9 @@ public class BidService {
         bid.setDescription(request.getDescription());
         bid.setCost(request.getCost());
         bid.setRegion(request.getRegion());
-        return BidMapper.toDto(bidRepository.save(bid));
+        bid = bidRepository.save(bid);
+        kafkaProducerService.sendLog("Bid updated: " + bid);
+        return BidMapper.toDto(bid);
     }
 
     private Bid getBidWithPermission(UUID bidId) {
@@ -119,7 +125,9 @@ public class BidService {
                 () -> new IllegalArgumentException("this version doesn't exist")
         );
         BidMapper.historyToEntity(bid, bidHistory);
-        return BidMapper.toDto(bidRepository.save(bid));
+        bid = bidRepository.save(bid);
+        kafkaProducerService.sendLog("Bid version rolled back: " + bid);
+        return BidMapper.toDto(bid);
     }
 
     @Transactional
@@ -143,6 +151,7 @@ public class BidService {
                 .build();
 
         feedback = feedbackRepository.save(feedback);
+        kafkaProducerService.sendLog("Feedback added: " + feedback);
         return FeedbackMapper.toDto(feedback);
     }
 
