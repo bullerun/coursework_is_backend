@@ -27,7 +27,7 @@ public class RoleRequestService {
         User user = userService.getCurrentUser();
         System.out.println(user.getUsername());
         if (roleRequestRepository.existsByUserIdAndStatus(user.getId(), RequestStatus.PENDING)) {
-            throw new RoleRequestConflictException("У вас уже есть активный запрос");
+            throw new RoleRequestConflictException("You already have an active request.");
         }
 
         RoleRequest request = new RoleRequest();
@@ -40,7 +40,7 @@ public class RoleRequestService {
     @Transactional
     public void approveRoleRequest(UUID requestId) {
         RoleRequest request = roleRequestRepository.findById(requestId)
-                .orElseThrow(() -> new NotFoundException("Запрос не найден"));
+                .orElseThrow(() -> new NotFoundException("Request not found"));
 
         request.setStatus(RequestStatus.APPROVED);
         roleRequestRepository.save(request);
@@ -51,7 +51,7 @@ public class RoleRequestService {
     @Transactional
     public void rejectRoleRequest(UUID requestId) {
         RoleRequest request = roleRequestRepository.findById(requestId)
-                .orElseThrow(() -> new NotFoundException("Запрос не найден"));
+                .orElseThrow(() -> new NotFoundException("Request not found"));
 
 
         request.setStatus(RequestStatus.REJECTED);

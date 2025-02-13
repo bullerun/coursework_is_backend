@@ -37,7 +37,7 @@ public class TenderService {
     private static final ForbiddenException forbiddenException = new ForbiddenException("permission denied");
 
     @Transactional
-    public List<TenderResponseDTO> getAllTenders(Integer page, Integer pageSize, @Pattern(regexp = "asc|desc", message = "sortDirection должен быть 'asc' или 'desc'") String sortDirection) {
+    public List<TenderResponseDTO> getAllTenders(Integer page, Integer pageSize, @Pattern(regexp = "asc|desc", message = "sortDirection has to be either 'asc' or 'desc'") String sortDirection) {
         return tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), "createdAt")), TenderStatus.PUBLISHED).stream().map(TenderMapper::toDto).toList();
     }
 

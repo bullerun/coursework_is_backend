@@ -26,13 +26,13 @@ public class UserService {
 
     public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
-            throw new IllegalArgumentException("Пользователь с таким именем уже существует");
+            throw new IllegalArgumentException("User with this username already exists.");
         }
         return save(user);
     }
 
     public User getByUsername(String username) {
-        return repository.findByUsername(username).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        return repository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found."));
 
     }
 
@@ -52,7 +52,7 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
-                () -> new NotFoundException("user not found")
+                () -> new NotFoundException("User not found.")
         );
     }
 
@@ -69,7 +69,7 @@ public class UserService {
     }
 
     public User findById(UUID userId) {
-        return repository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        return repository.findById(userId).orElseThrow(() -> new NotFoundException("User not found."));
 
     }
 

@@ -14,20 +14,20 @@ import java.util.UUID;
 @Builder
 public class TenderResponseDTO {
 
-    @NotNull(message = "id тендера не может быть пустым")
+    @NotNull(message = "Tender ID is required")
     private UUID id;
 
-    @NotBlank(message = "Название тендера не может быть пустым")
+    @NotBlank(message = "Tender name can not be blank")
     private String name;
 
-    @NotBlank(message = "Описание тендера не может быть пустым")
+    @NotBlank(message = "Tender description can not be blank")
     private String description;
 
-    @NotNull(message = "Стоимость тендера должна быть указана")
-    @DecimalMin(value = "0.0", message = "Стоимость не может быть отрицательной")
+    @NotNull(message = "Tender cost is required")
+    @DecimalMin(value = "0.0", message = "Tender cost can not be negative")
     private Long cost;
 
-    @NotBlank(message = "Регион не может быть пустым")
+    @NotBlank(message = "Region can not be blank")
     @Pattern(regexp = """
              Республика\\sАдыгея |
              Республика\\sАлтай |
@@ -112,15 +112,15 @@ public class TenderResponseDTO {
              Ханты-Мансийский\\sАО |
              Чукотский\\sАО |
              Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS,
-            message = "Неверное название региона")
+            message = "Invalid region name")
     private String region;
 
-    @NotNull(message = "ID организации не может быть пустым")
+    @NotNull(message = "Organization ID is required")
     private UUID organizationId;
 
-    @NotNull(message = "ID создателя не может быть пустым")
+    @NotNull(message = "Owner ID is required")
     private UUID ownerID;
 
-    @NotNull(message = "сроки выполнения")
+    @NotNull(message = "Expiration time is required")
     private LocalDateTime expiredAt;
 }

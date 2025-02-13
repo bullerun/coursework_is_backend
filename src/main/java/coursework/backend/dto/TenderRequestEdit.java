@@ -13,17 +13,17 @@ import java.time.LocalDateTime;
 @Builder
 public class TenderRequestEdit {
 
-    @NotBlank(message = "Название тендера не может быть пустым")
+    @NotBlank(message = "Tender name can not be blank")
     private String name;
 
-    @NotBlank(message = "Описание тендера не может быть пустым")
+    @NotBlank(message = "Tender description can not be blank")
     private String description;
 
-    @NotNull(message = "Стоимость тендера должна быть указана")
-    @DecimalMin(value = "0.0", message = "Стоимость не может быть отрицательной")
+    @NotNull(message = "Tender cost is required")
+    @DecimalMin(value = "0.0", message = "Tender cost can not be negative")
     private Long cost;
 
-    @NotBlank(message = "Регион не может быть пустым")
+    @NotBlank(message = "Region can not be blank")
     @Pattern(regexp = """
             Республика\\sАдыгея |
              Республика\\sАлтай |
@@ -107,9 +107,9 @@ public class TenderRequestEdit {
              Ненецкий\\sАО |
              Ханты-Мансийский\\sАО |
              Чукотский\\sАО |
-             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Неверное название региона")
+             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Invalid region name")
     private String region;
 
-    @NotNull(message = "сроки выполнения")
+    @NotNull(message = "Expiration time is required")
     private LocalDateTime expiredAt;
 }

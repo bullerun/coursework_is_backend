@@ -29,7 +29,7 @@ public class BidRequestDTO {
     @NotNull
     private Long authorId;
 
-    @NotNull(message = "предположительные сроки выполнения")
+    @NotNull(message = "Expiration time is required")
     private LocalDateTime expiredAt;
 
 

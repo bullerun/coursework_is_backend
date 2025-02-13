@@ -21,21 +21,21 @@ public class RoleRequestController {
     @PostMapping("/change")
     public ResponseEntity<String> requestRoleChange(@RequestParam Role role) {
         roleRequestService.requestRoleChange(role);
-        return ResponseEntity.ok("Запрос на смену роли отправлен");
+        return ResponseEntity.ok("Role change request sent.");
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{requestId}/approve")
     public ResponseEntity<String> approveRequest(@PathVariable UUID requestId) {
         roleRequestService.approveRoleRequest(requestId);
-        return ResponseEntity.ok("Запрос одобрен, роль изменена");
+        return ResponseEntity.ok("Request approved, role changed.");
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{requestId}/reject")
     public ResponseEntity<String> rejectRequest(@PathVariable UUID requestId) {
         roleRequestService.rejectRoleRequest(requestId);
-        return ResponseEntity.ok("Запрос отклонен");
+        return ResponseEntity.ok("Request rejected.");
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -35,10 +35,10 @@ public class BidController {
             description = "Creates a new bid and assigns a unique identifier and creation time",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bid successfully created", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "bad field", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), //TODO
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Bid created successfully.", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), //TODO
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<BidResponseDTO> createBid(@RequestBody @Valid BidRequestCreate request) {
@@ -74,14 +74,14 @@ public class BidController {
             description = "Edit bid",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Предложение успешно обновлено"),
-                    @ApiResponse(responseCode = "400", description = "Некорректные входные данные"),
-                    @ApiResponse(responseCode = "404", description = "Предложение не найдено")
+                    @ApiResponse(responseCode = "200", description = "Bid updated successfully."),
+                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid."),
+                    @ApiResponse(responseCode = "404", description = "Bid not found.")
             }
     )
     @PatchMapping("/{bidId}/edit")
     public ResponseEntity<BidResponseDTO> editBid(
-            @Parameter(description = "Идентификатор предложения")
+            @Parameter(description = "Bid ID")
             @PathVariable @Valid @NotNull UUID bidId,
             @RequestBody @Valid BidRequestEdit bid
     ) {
@@ -90,23 +90,23 @@ public class BidController {
 
     @Operation(
             summary = "Rollback bid version",
-            description = "Откатить параметры предложения к указанной версии. Это считается новой правкой, поэтому версия инкрементируется.",
+            description = "Rollback bid's parameters to a stated version. It counts as a new edit, thus the version is incremented.",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Предложение успешно откатано и версия инкрементирована."),
-                    @ApiResponse(responseCode = "400", description = "Неверный формат запроса или его параметры."),
-                    @ApiResponse(responseCode = "401", description = "Пользователь не существует или некорректен."),
-                    @ApiResponse(responseCode = "403", description = "Недостаточно прав для выполнения действия."),
-                    @ApiResponse(responseCode = "404", description = "Предложение или версия не найдены.")
+                    @ApiResponse(responseCode = "200", description = "Bid rolled back successfully and the version was incremented."),
+                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid."),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid."),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions."),
+                    @ApiResponse(responseCode = "404", description = "Bid or version not found.")
             }
     )
     @PutMapping("/{bidId}/rollback/{version}")
     public ResponseEntity<BidResponseDTO> rollbackBid(
-            @Parameter(description = "Идентификатор предложения")
+            @Parameter(description = "Bid ID")
             @PathVariable @Valid @NotNull UUID bidId,
 
-            @Parameter(description = "Номер версии, к которой нужно откатить предложение.")
-            @PathVariable @Valid @Min(value = 1, message = "версия не может быть меньше 1") Long version
+            @Parameter(description = "Version to rollback Bid to.")
+            @PathVariable @Valid @Min(value = 1, message = "version can not be less than 1") Long version
 
     ) {
         return ResponseEntity.ok(bidService.rollbackBid(bidId, version));
