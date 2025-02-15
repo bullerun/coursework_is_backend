@@ -33,10 +33,10 @@ public interface BidRepository extends JpaRepository<Bid, UUID> {
             "b.authorId IN (SELECT o.organisation.id FROM OrganisationEmployee o WHERE o.employee.username = :username))")
     List<Bid> getUserBids(@Param("username") String username, @Param("authorType") AuthorType authorType);
 
-    @Query("SELECT COUNT(b) > 0 FROM Bid b " +
-            "WHERE b.authorType = :authorType AND " +
-            "b.authorId IN (SELECT o.organisation.id FROM OrganisationEmployee o WHERE o.employee.username = :username)")
-    Optional<Bid> getBidById(UUID bidId);
+//    @Query("SELECT COUNT(b) > 0 FROM Bid b " +
+//            "WHERE b.authorType = :authorType AND " +
+//            "b.authorId IN (SELECT o.organisation.id FROM OrganisationEmployee o WHERE o.employee.username = :username)")
+//    Optional<Bid> getBidById(UUID bidId);
 
     @Query("""
                 SELECT b FROM Bid b

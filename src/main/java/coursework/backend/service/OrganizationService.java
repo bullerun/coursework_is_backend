@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -49,8 +50,17 @@ public class OrganizationService {
 
     @Transactional
     public void createOrganizationInvite(InviteRequest request) {
+        if (organisationEmployeeRepository.findByOrganisationIdAndEmployeeUsername(request.getOrganizationId(), userService.getCurrentUserUsername()).orElseThrow(
+                () -> new NotFoundException("Organization invite not found or you don't work in")
+        ).getPosition() != EmployeePositionInOrganization.HEAD) {
+            throw new ForbiddenException("Organization invite is forbidden");
+        }
+        if (Objects.equals(userService.getCurrentUserUsername(), request.getReceiverUsername())) {
+            throw new ForbiddenException("You can't invite yourself");
+        }
         User sender = userService.getCurrentUser();
         User receiver = userService.findByUsername(request.getReceiverUsername());
+
         OrganisationInvite organisationInvite = OrganisationInvite.builder()
                 .sender(sender)
                 .receiver(receiver)
@@ -115,11 +125,8 @@ public class OrganizationService {
     public String updateRole(InviteRequest request) {
         if (organisationEmployeeRepository.findByOrganisationIdAndEmployeeUsername(request.getOrganizationId(), userService.getCurrentUserUsername()).orElseThrow(
                 () -> new NotFoundException("OrganisationEmployee not found")
-        ).getPosition() == EmployeePositionInOrganization.HEAD) {
-            if (organisationEmployeeRepository.updatePositionByOrganisationIdAndEmployeeUsername(request.getOrganizationId(), request.getReceiverUsername(), EmployeePositionInOrganization.HEAD) > 0) {
-                return "employee position updated";
-            }
-            return "employee position already head";
+        ).getPosition() == EmployeePositionInOrganization.HEAD && organisationEmployeeRepository.updatePositionByOrganisationIdAndEmployeeUsername(request.getOrganizationId(), request.getReceiverUsername(), EmployeePositionInOrganization.HEAD) > 0) {
+            return "employee role has been update";
         }
         throw new ForbiddenException("you are not head");
     }
