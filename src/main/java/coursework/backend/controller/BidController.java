@@ -44,10 +44,14 @@ public class BidController {
             description = "Creates a new bid and assigns a unique identifier and creation time",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bid created successfully.", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Bid created successfully.",
+                            content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))), //TODO
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<BidResponseDTO> createBid(@RequestBody @Valid BidRequestCreate request) {
@@ -60,9 +64,12 @@ public class BidController {
             description = "Get a list of the current user's Bids",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bids retrieved", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Bids retrieved",
+                            content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<List<BidResponseDTO>> getUserBids() {
@@ -75,14 +82,19 @@ public class BidController {
             description = "Get Bids that associate with a Tender with stated ID",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bids retrieved", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Bids retrieved",
+                            content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    public ResponseEntity<List<BidResponseDTO>> getBidsForTender(@PathVariable @Valid @NotNull UUID tenderId,
-                                                                 @RequestParam(defaultValue = "0", required = false) @Min(value = 0, message = "Page number can't be negative") Integer page,
-                                                                 @RequestParam(defaultValue = "10", required = false) @Min(value = 1, message = "Page size should be positive") Integer pageSize) {
+    public ResponseEntity<List<BidResponseDTO>> getBidsForTender(
+            @PathVariable @Valid @NotNull UUID tenderId,
+            @RequestParam(defaultValue = "0", required = false) @Min(value = 0, message = "Page number can't be negative") Integer page,
+            @RequestParam(defaultValue = "10", required = false) @Min(value = 1, message = "Page size should be positive") Integer pageSize
+    ) {
         List<BidResponseDTO> bids = bidService.getBidsForTender(tenderId, page, pageSize);
         return ResponseEntity.ok(bids);
     }
@@ -93,9 +105,12 @@ public class BidController {
             description = "Get the status of a Bid with stated ID",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bid status retrieved", content = @Content(schema = @Schema(implementation = BidStatus.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Bid status retrieved",
+                            content = @Content(schema = @Schema(implementation = BidStatus.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<BidStatus> getBidsStatus(@PathVariable @Valid @NotNull UUID bidId) {
@@ -108,9 +123,12 @@ public class BidController {
             description = "Edit the status of a Bid with stated ID",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bid status updated", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Bid status updated",
+                            content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<BidResponseDTO> editBidsStatus(@PathVariable @Valid @NotNull UUID bidId,
@@ -118,16 +136,21 @@ public class BidController {
         return ResponseEntity.ok(bidService.editBidsStatus(bidId, bidstatus));
     }
 
-    @PatchMapping(value = "/{bidId}/edit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{bidId}/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
             summary = "Edit Bid",
             description = "Edit Bid with stated ID",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bid updated successfully.", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Bid updated successfully.",
+                            content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<BidResponseDTO> editBid(
@@ -144,10 +167,14 @@ public class BidController {
             description = "Rollback bid's parameters to a stated version. It counts as a new edit, thus the version is incremented.",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bid rolled back successfully and the version was incremented.", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Bid rolled back successfully and the version was incremented.",
+                            content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<BidResponseDTO> rollbackBid(
