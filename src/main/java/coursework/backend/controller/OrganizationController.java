@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,8 @@ public class OrganizationController {
 
     private final OrganizationService organizationService;
 
-    @PostMapping("/new")
+    @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
             summary = "Create a new organization",
             description = "Creates a new organization and assigns a unique identifier",
@@ -46,7 +48,9 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "401", description = "Unauthorized",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Forbidden",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid request parameters",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             }
     )
     public ResponseEntity<Organization> createOrganization(@RequestBody @Valid OrganizationRequestDTO request) {
@@ -54,31 +58,105 @@ public class OrganizationController {
     }
 
 
-    @PostMapping("/invite/add")
+    @PostMapping(value = "/invite/add", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    @Operation(
+            summary = "Add invite to organization",
+            description = "Create a new invite to an organization with a specified ID",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Invite created successfully",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid request parameters",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Organization with stated ID not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            }
+    )
     public ResponseEntity<String> addEmployee(@RequestBody @Valid InviteRequest request) {
         organizationService.createOrganizationInvite(request);
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping("/invite/{invitationId}/accept")
+    @PostMapping(value = "/invite/{invitationId}/accept", produces = MediaType.TEXT_PLAIN_VALUE)
+    @Operation(
+            summary = "Accept invite",
+            description = "Accept organization invite with a specified ID",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Invite accepted successfully",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Invite with stated ID not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            }
+    )
     public ResponseEntity<String> acceptInvitation(@PathVariable UUID invitationId) {
         organizationService.acceptInvite(invitationId);
         return ResponseEntity.ok("Приглашение принято");
     }
 
-    @PostMapping("/invite/{invitationId}/reject")
+    @PostMapping(value = "/invite/{invitationId}/reject", produces = MediaType.TEXT_PLAIN_VALUE)
+    @Operation(
+            summary = "Reject invite",
+            description = "Reject organization invite with a specified ID",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Invite rejected successfully",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Invite with stated ID not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            }
+    )
     public ResponseEntity<String> rejectInvitation(@PathVariable UUID invitationId) {
         organizationService.declineInvite(invitationId);
         return ResponseEntity.ok("Приглашение отклонено");
     }
 
-    @GetMapping("/invite/myInvitations")
+    @GetMapping(value = "/invite/myInvitations", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Get current user's invitations",
+            description = "Get a list of all organization invitations sent to current user",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Invites retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
     public ResponseEntity<List<OrganizationInvitesResponse>> myInvitations() {
         return ResponseEntity.ok(organizationService.getMyInvitations());
     }
 
-    @GetMapping("/invite/myInvite")
-    public ResponseEntity<List<OrganizationInvitesResponse>> iInvite() {
+    @GetMapping(value = "/invite/myInvite", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Get current user's sent invites",
+            description = "Get a list of all organization invitations sent by current user",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Invites retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    public ResponseEntity<List<OrganizationInvitesResponse>> myInvites() {
         return ResponseEntity.ok(organizationService.getMyInvites());
     }
 

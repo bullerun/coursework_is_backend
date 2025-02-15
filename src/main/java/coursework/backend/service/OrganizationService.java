@@ -48,6 +48,11 @@ public class OrganizationService {
 
     @Transactional
     public void createOrganizationInvite(InviteRequest request) {
+        try {
+            organizationRepository.findById(request.getOrganizationId());
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Organization not found");
+        }
         User sender = userService.getCurrentUser();
         User receiver = userService.findByUsername(request.getReceiverUsername());
         OrganisationInvite organisationInvite = OrganisationInvite.builder()
@@ -106,5 +111,4 @@ public class OrganizationService {
         return organizationRepository.findById(id).orElseThrow(() -> new NotFoundException("Organization not found"));
     }
 
-    //TODO сделать повышение прав
 }

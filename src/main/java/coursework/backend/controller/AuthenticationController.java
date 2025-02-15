@@ -1,6 +1,9 @@
 package coursework.backend.controller;
 
-import coursework.backend.dto.*;
+import coursework.backend.dto.ErrorResponse;
+import coursework.backend.dto.JwtAuthenticationResponse;
+import coursework.backend.dto.SignInRequest;
+import coursework.backend.dto.SignUpRequest;
 import coursework.backend.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,7 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +28,10 @@ public class AuthenticationController {
             summary = "Sign up",
             description = "User signing up",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "User signed up successfully", content = @Content(schema = @Schema(implementation = JwtAuthenticationResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Username already taken", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "200", description = "User signed up successfully",
+                            content = @Content(schema = @Schema(implementation = JwtAuthenticationResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Username already taken",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             }
     )
     public JwtAuthenticationResponse signUp(@Valid @RequestBody SignUpRequest sign) {
@@ -35,8 +43,10 @@ public class AuthenticationController {
             summary = "Sign in",
             description = "User signing in",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "User signed in successfully", content = @Content(schema = @Schema(implementation = JwtAuthenticationResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Invalid credentials", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "200", description = "User signed in successfully",
+                            content = @Content(schema = @Schema(implementation = JwtAuthenticationResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Invalid credentials",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             }
     )
     public JwtAuthenticationResponse signIn(@Valid @RequestBody SignInRequest sign) {

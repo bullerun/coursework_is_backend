@@ -1,6 +1,5 @@
 package coursework.backend.controller;
 
-import coursework.backend.dto.BidResponseDTO;
 import coursework.backend.dto.ErrorResponse;
 import coursework.backend.dto.FeedbackRequestDTO;
 import coursework.backend.dto.FeedbackResponseDTO;
@@ -40,11 +39,16 @@ public class FeedbackController {
             description = "Add feedback to a specified bid of a specified organization",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Feedback added successfully", content = @Content(schema = @Schema(implementation = FeedbackResponseDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "Bid or organization no found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "Feedback added successfully",
+                            content = @Content(schema = @Schema(implementation = FeedbackResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid request data",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Bid or organization no found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<FeedbackResponseDTO> addFeedback(@Valid @RequestBody FeedbackRequestDTO request) {
@@ -57,9 +61,12 @@ public class FeedbackController {
             description = "Get a list of all feedback for a Bid with a specified ID",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "List of feedback entries retrieved", content = @Content(schema = @Schema(implementation = FeedbackResponseDTO.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "List of feedback entries retrieved",
+                            content = @Content(schema = @Schema(implementation = FeedbackResponseDTO.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
     public ResponseEntity<List<FeedbackResponseDTO>> getFeedbacks(@PathVariable UUID bidId) {
@@ -73,9 +80,12 @@ public class FeedbackController {
             description = "Get a list of approved feedback entries for a Bid with a specified ID",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "List of feedback entries retrieved", content = @Content(schema = @Schema(implementation = FeedbackResponseDTO.class))),
-                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    @ApiResponse(responseCode = "200", description = "List of feedback entries retrieved",
+                            content = @Content(schema = @Schema(implementation = FeedbackResponseDTO.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
 
     )
