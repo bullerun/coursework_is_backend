@@ -11,18 +11,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BidRequestEdit {
-    @NotBlank(message = "Название предложения не может быть пустым")
-    @Size(max = 255, message = "Название не должно превышать 255 символов")
+    @NotBlank(message = "Bid name can not be blank")
+    @Size(max = 255, message = "Bid name's length can not be greater than 255")
     private String name;
 
-    @NotBlank(message = "Описание предложения не может быть пустым")
-    @Size(max = 1000, message = "Описание не должно превышать 1000 символов")
+    @NotBlank(message = "Bid description can not be blank")
+    @Size(max = 1000, message = "Bid description's length can not be greater than 1000")
     private String description;
 
-    @Min(value = 0, message = "цена не может быть отрицательной")
+    @Min(value = 0, message = "Bid cost can not be negative")
     private Long cost;
 
-    @NotBlank(message = "Регион не может быть пустым")
+    @NotBlank(message = "Region can not be blank")
     @Pattern(regexp = """
             Республика\\sАдыгея |
              Республика\\sАлтай |
@@ -106,9 +106,9 @@ public class BidRequestEdit {
              Ненецкий\\sАО |
              Ханты-Мансийский\\sАО |
              Чукотский\\sАО |
-             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Неверное название региона")
+             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Invalid region name")
     private String region;
 
-    @NotNull(message = "предположительные сроки выполнения")
+    @NotNull(message = "Expiration time is required")
     private LocalDateTime expiredAt;
 }

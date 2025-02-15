@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new ErrorResponse("Доступ запрещен", "У вас недостаточно прав для выполнения этого действия"));
+                .body(new ErrorResponse("Access denied", "Insufficient permissions"));
     }
 
     @ExceptionHandler(NotFoundException.class)

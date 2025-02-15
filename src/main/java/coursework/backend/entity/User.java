@@ -20,6 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "users")
 @Data
+@ToString
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

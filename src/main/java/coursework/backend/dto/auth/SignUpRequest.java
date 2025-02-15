@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 public class SignUpRequest {
-    @NotBlank(message = "username не должен быть пустым")
+    @NotBlank(message = "Username can not be blank")
     private String username;
-    @NotBlank(message = "username не должен быть пустым")
+    @NotBlank(message = "Email can not be blank")
     private String email;
-    @NotBlank(message = "password не должен быть пустым")
+    @NotBlank(message = "Password can not be blank")
     private String password;
 }

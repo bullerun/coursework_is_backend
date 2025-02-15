@@ -26,11 +26,13 @@ public class OrganizationService {
     private final UserService userService;
     private final OrganisationEmployeeRepository organisationEmployeeRepository;
     private final OrganizationInviteRepository inviteRepository;
+    private final KafkaProducerService kafkaProducerService;
 
     @Transactional
     public Organization createOrganization(@Valid OrganizationRequestDTO request) {
         Organization organization = Organization.builder().name(request.getName()).description(request.getDescription()).build();
         organization = organizationRepository.save(organization);
+        kafkaProducerService.sendLog("Organization created: " + organization);
 
         User user = userService.getCurrentUser();
 
@@ -39,7 +41,8 @@ public class OrganizationService {
                 .employee(user).organisation(organization)
                 .position(EmployeePositionInOrganization.HEAD)
                 .build();
-        organisationEmployeeRepository.save(organisationEmployee);
+        organisationEmployee = organisationEmployeeRepository.save(organisationEmployee);
+        kafkaProducerService.sendLog("OrganisationEmployee created: " + organisationEmployee);
         return organization;
     }
 
@@ -52,7 +55,8 @@ public class OrganizationService {
                 .receiver(receiver)
                 .organizationId(request.getOrganizationId())
                 .build();
-        inviteRepository.save(organisationInvite);
+        organisationInvite = inviteRepository.save(organisationInvite);
+        kafkaProducerService.sendLog("OrganizationInvite created: " + organisationInvite);
     }
 
     public OrganisationInvite getInviteById(UUID id) {
@@ -69,7 +73,8 @@ public class OrganizationService {
     public void acceptInvite(UUID inviteId) {
         OrganisationInvite invite = getInviteById(inviteId);
         invite.setStatus(InviteStatus.ACCEPTED);
-        inviteRepository.save(invite);
+        invite = inviteRepository.save(invite);
+        kafkaProducerService.sendLog("Invite accepted: " + invite);
 
         Organization organization = getOrganizationById(invite.getOrganizationId());
         OrganisationEmployee organisationEmployee = OrganisationEmployee.builder()
@@ -77,14 +82,16 @@ public class OrganizationService {
                 .employee(invite.getReceiver()).organisation(organization)
                 .position(EmployeePositionInOrganization.WORKER)
                 .build();
-        organisationEmployeeRepository.save(organisationEmployee);
+        organisationEmployee = organisationEmployeeRepository.save(organisationEmployee);
+        kafkaProducerService.sendLog("OrganizationEmployee created: " + organisationEmployee);
     }
 
     @Transactional
     public void declineInvite(UUID inviteId) {
         OrganisationInvite invite = getInviteById(inviteId);
         invite.setStatus(InviteStatus.DECLINED);
-        inviteRepository.save(invite);
+        invite = inviteRepository.save(invite);
+        kafkaProducerService.sendLog("Invite declined: " + invite);
     }
 
     public List<OrganizationInvitesResponse> getMyInvitations() {

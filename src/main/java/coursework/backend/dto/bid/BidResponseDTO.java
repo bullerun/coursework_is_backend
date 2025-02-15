@@ -43,6 +43,7 @@ public class BidResponseDTO {
 
     private LocalDateTime createdAt;
 
+    @NotNull(message = "Expiration time is required")
     private LocalDateTime expiredAt;
 }
 

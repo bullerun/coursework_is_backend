@@ -32,12 +32,13 @@ public class TenderService {
     private final TenderHistoryRepository tenderHistoryRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final KafkaProducerService kafkaProducerService;
 
     private static final NotFoundException notFoundException = new NotFoundException("not found");
     private static final ForbiddenException forbiddenException = new ForbiddenException("permission denied");
 
     @Transactional
-    public List<TenderResponseDTO> getAllTenders(Integer page, Integer pageSize, @Pattern(regexp = "asc|desc", message = "sortDirection должен быть 'asc' или 'desc'") String sortDirection) {
+    public List<TenderResponseDTO> getAllTenders(Integer page, Integer pageSize, @Pattern(regexp = "asc|desc", message = "sortDirection has to be either 'asc' or 'desc'") String sortDirection) {
         return tenderRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), "createdAt")), TenderStatus.PUBLISHED).stream().map(TenderMapper::toDto).toList();
     }
 
@@ -56,7 +57,9 @@ public class TenderService {
                 .expiredAt(request.getExpiredAt())
                 .ownerID(userService.getCurrentUser().getId())
                 .build();
-        return TenderMapper.toDto(tenderRepository.save(tender));
+        tender = tenderRepository.save(tender);
+        kafkaProducerService.sendLog("Tender created: " + tender);
+        return TenderMapper.toDto(tender);
     }
 
     @Transactional
@@ -89,7 +92,9 @@ public class TenderService {
         }
 
         tender.setTenderStatus(status);
-        return TenderMapper.toDto(tenderRepository.save(tender));
+        tender = tenderRepository.save(tender);
+        kafkaProducerService.sendLog("Tender updated: " + tender);
+        return TenderMapper.toDto(tender);
     }
 
     @Transactional
@@ -106,7 +111,9 @@ public class TenderService {
         tender.setCost(request.getCost());
         tender.setRegion(request.getRegion().strip());
 
-        return TenderMapper.toDto(tenderRepository.save(tender));
+        tender = tenderRepository.save(tender);
+        kafkaProducerService.sendLog("Tender updated: " + tender);
+        return TenderMapper.toDto(tender);
     }
 
 
@@ -125,7 +132,9 @@ public class TenderService {
                 () -> new IllegalArgumentException("this version doesn't exist")
         );
         TenderMapper.historyToEntity(tender, oldTender);
-        return TenderMapper.toDto(tenderRepository.save(tender));
+        tender = tenderRepository.save(tender);
+        kafkaProducerService.sendLog("Tender version rolled back: " + tender);
+        return TenderMapper.toDto(tender);
     }
 
 }

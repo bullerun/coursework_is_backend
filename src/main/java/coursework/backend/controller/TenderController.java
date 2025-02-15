@@ -42,7 +42,7 @@ public class TenderController {
     private final TenderService tenderService;
 
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get user tenders",
             description = "Retrieve tenders associated with a specific user",
             responses = {

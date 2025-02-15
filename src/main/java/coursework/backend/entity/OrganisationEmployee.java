@@ -12,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@ToString
 public class OrganisationEmployee {
     @EmbeddedId
     private OrganisationEmployeeId id;
