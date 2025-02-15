@@ -1,5 +1,6 @@
 package coursework.backend.controller;
 
+import coursework.backend.dto.ErrorResponse;
 import coursework.backend.dto.auth.JwtAuthenticationResponse;
 import coursework.backend.dto.auth.SignInRequest;
 import coursework.backend.dto.auth.SignUpRequest;

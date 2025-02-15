@@ -1,21 +1,24 @@
 package coursework.backend.controller;
 
+import coursework.backend.dto.ErrorResponse;
 import coursework.backend.dto.bid.BidRequestCreate;
 import coursework.backend.dto.bid.BidRequestEdit;
 import coursework.backend.dto.bid.BidResponseDTO;
-import coursework.backend.dto.ErrorResponse;
 import coursework.backend.entity.enums.BidStatus;
 import coursework.backend.service.BidService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +45,7 @@ public class BidController {
             security = @SecurityRequirement(name = "JWT"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Bid created successfully.", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), //TODO
+                    @ApiResponse(responseCode = "400", description = "Request's format or its parameters are invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
@@ -72,7 +75,7 @@ public class BidController {
             description = "Get Bids that associate with a Tender with stated ID",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bids retrieved",content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "Bids retrieved", content = @Content(schema = @Schema(implementation = BidResponseDTO.class))),
                     @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
@@ -90,7 +93,7 @@ public class BidController {
             description = "Get the status of a Bid with stated ID",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Bid status retrieved",content = @Content(schema = @Schema(implementation = BidStatus.class))),
+                    @ApiResponse(responseCode = "200", description = "Bid status retrieved", content = @Content(schema = @Schema(implementation = BidStatus.class))),
                     @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
@@ -147,7 +150,6 @@ public class BidController {
                     @ApiResponse(responseCode = "403", description = "Insufficient permissions.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    @PutMapping("/{bidId}/rollback/{version}")
     public ResponseEntity<BidResponseDTO> rollbackBid(
             @Parameter(description = "Bid ID")
             @PathVariable @Valid @NotNull UUID bidId,
