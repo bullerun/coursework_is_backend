@@ -2,8 +2,8 @@ package coursework.backend.controller;
 
 
 import coursework.backend.dto.ErrorResponse;
-import coursework.backend.dto.organization.OrganizationInvitesResponse;
 import coursework.backend.dto.organization.InviteRequest;
+import coursework.backend.dto.organization.OrganizationInvitesResponse;
 import coursework.backend.dto.organization.OrganizationRequestDTO;
 import coursework.backend.entity.Organization;
 import coursework.backend.service.OrganizationService;
@@ -82,5 +82,9 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.getMyInvites());
     }
 
+    @PostMapping("/updateRole")
+    public ResponseEntity<String> updateRole(@RequestBody @Valid InviteRequest request) {
+        return ResponseEntity.ok(organizationService.updateRole(request));
+    }
 }
 

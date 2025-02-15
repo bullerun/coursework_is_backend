@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class KafkaProducerService {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private static final String TOPIC = "auth-logs"; // Название Kafka-топика
+    private static final String TOPIC = "auth-logs";
 
     public void sendLog(String message) {
         kafkaTemplate.send(TOPIC, message);

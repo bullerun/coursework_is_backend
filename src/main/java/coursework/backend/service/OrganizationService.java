@@ -1,12 +1,13 @@
 package coursework.backend.service;
 
-import coursework.backend.dto.organization.OrganizationInvitesResponse;
-import coursework.backend.dto.organization.InviteRequest;
 import coursework.backend.dto.mapper.OrganizationMapper;
+import coursework.backend.dto.organization.InviteRequest;
+import coursework.backend.dto.organization.OrganizationInvitesResponse;
 import coursework.backend.dto.organization.OrganizationRequestDTO;
 import coursework.backend.entity.*;
 import coursework.backend.entity.enums.EmployeePositionInOrganization;
 import coursework.backend.entity.enums.InviteStatus;
+import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
 import coursework.backend.repository.OrganisationEmployeeRepository;
 import coursework.backend.repository.OrganizationInviteRepository;
@@ -95,16 +96,32 @@ public class OrganizationService {
     }
 
     public List<OrganizationInvitesResponse> getMyInvitations() {
-        return inviteRepository.findByReceiverId(userService.getCurrentUser().getId()).stream().map(OrganizationMapper::toOrganizationInvitesResponse).toList();
+        return inviteRepository.findByReceiverId(userService.getCurrentUser().getId()).stream()
+                .map(OrganizationMapper::toOrganizationInvitesResponse)
+                .toList();
     }
 
     public List<OrganizationInvitesResponse> getMyInvites() {
-        return inviteRepository.findBySenderId(userService.getCurrentUser().getId()).stream().map(OrganizationMapper::toOrganizationInvitesResponse).toList();
+        return inviteRepository.findBySenderId(userService.getCurrentUser().getId()).stream()
+                .map(OrganizationMapper::toOrganizationInvitesResponse)
+                .toList();
     }
 
     public Organization getOrganizationById(UUID id) {
         return organizationRepository.findById(id).orElseThrow(() -> new NotFoundException("Organization not found"));
     }
 
-    //TODO сделать повышение прав
+    @Transactional
+    public String updateRole(InviteRequest request) {
+        if (organisationEmployeeRepository.findByOrganisationIdAndEmployeeUsername(request.getOrganizationId(), userService.getCurrentUserUsername()).orElseThrow(
+                () -> new NotFoundException("OrganisationEmployee not found")
+        ).getPosition() == EmployeePositionInOrganization.HEAD) {
+            if (organisationEmployeeRepository.updatePositionByOrganisationIdAndEmployeeUsername(request.getOrganizationId(), request.getReceiverUsername(), EmployeePositionInOrganization.HEAD) > 0) {
+                return "employee position updated";
+            }
+            return "employee position already head";
+        }
+        throw new ForbiddenException("you are not head");
+    }
+
 }

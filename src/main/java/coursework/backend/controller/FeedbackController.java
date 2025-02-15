@@ -1,5 +1,6 @@
 package coursework.backend.controller;
 
+import coursework.backend.dto.ErrorResponse;
 import coursework.backend.dto.feedback.FeedbackRequestDTO;
 import coursework.backend.dto.feedback.FeedbackResponseDTO;
 import coursework.backend.service.BidService;

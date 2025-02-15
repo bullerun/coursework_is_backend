@@ -44,8 +44,6 @@ public class UserService {
     }
 
     public String getCurrentUserUsername() {
-        var UserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(UserDetails.toString());
         return ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
     }
 
