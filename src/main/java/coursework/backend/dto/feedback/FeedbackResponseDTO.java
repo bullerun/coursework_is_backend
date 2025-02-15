@@ -1,4 +1,4 @@
-package coursework.backend.dto;
+package coursework.backend.dto.feedback;
 
 import coursework.backend.entity.enums.FeedbackStatus;
 import lombok.Data;

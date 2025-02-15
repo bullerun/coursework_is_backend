@@ -1,4 +1,4 @@
-package coursework.backend.dto;
+package coursework.backend.dto.tender;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

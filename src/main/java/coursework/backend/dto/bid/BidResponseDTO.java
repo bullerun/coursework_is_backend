@@ -1,4 +1,4 @@
-package coursework.backend.dto;
+package coursework.backend.dto.bid;
 
 import coursework.backend.entity.enums.AuthorType;
 import coursework.backend.entity.enums.BidStatus;

@@ -1,4 +1,4 @@
-package coursework.backend.dto;
+package coursework.backend.dto.tender;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -8,14 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
-public class TenderResponseDTO {
-
-    @NotNull(message = "id тендера не может быть пустым")
-    private UUID id;
+public class TenderRequestEdit {
 
     @NotBlank(message = "Название тендера не может быть пустым")
     private String name;
@@ -29,7 +25,7 @@ public class TenderResponseDTO {
 
     @NotBlank(message = "Регион не может быть пустым")
     @Pattern(regexp = """
-             Республика\\sАдыгея |
+            Республика\\sАдыгея |
              Республика\\sАлтай |
              Республика\\sБашкортостан |
              Республика\\sБурятия |
@@ -111,15 +107,8 @@ public class TenderResponseDTO {
              Ненецкий\\sАО |
              Ханты-Мансийский\\sАО |
              Чукотский\\sАО |
-             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS,
-            message = "Неверное название региона")
+             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Неверное название региона")
     private String region;
-
-    @NotNull(message = "ID организации не может быть пустым")
-    private UUID organizationId;
-
-    @NotNull(message = "ID создателя не может быть пустым")
-    private UUID ownerID;
 
     @NotNull(message = "сроки выполнения")
     private LocalDateTime expiredAt;

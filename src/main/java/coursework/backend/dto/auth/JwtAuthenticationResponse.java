@@ -1,4 +1,4 @@
-package coursework.backend.dto;
+package coursework.backend.dto.auth;
 
 import coursework.backend.entity.enums.Role;
 import lombok.AllArgsConstructor;

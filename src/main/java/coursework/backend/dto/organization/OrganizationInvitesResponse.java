@@ -1,4 +1,4 @@
-package coursework.backend.dto;
+package coursework.backend.dto.organization;
 
 import coursework.backend.entity.enums.InviteStatus;
 import lombok.Builder;

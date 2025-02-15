@@ -1,30 +1,35 @@
-package coursework.backend.dto;
+package coursework.backend.dto.tender;
 
-import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BidRequestEdit {
-    @NotBlank(message = "Название предложения не может быть пустым")
-    @Size(max = 255, message = "Название не должно превышать 255 символов")
+@Builder
+public class TenderResponseDTO {
+
+    @NotNull(message = "id тендера не может быть пустым")
+    private UUID id;
+
+    @NotBlank(message = "Название тендера не может быть пустым")
     private String name;
 
-    @NotBlank(message = "Описание предложения не может быть пустым")
-    @Size(max = 1000, message = "Описание не должно превышать 1000 символов")
+    @NotBlank(message = "Описание тендера не может быть пустым")
     private String description;
 
-    @Min(value = 0, message = "цена не может быть отрицательной")
+    @NotNull(message = "Стоимость тендера должна быть указана")
+    @DecimalMin(value = "0.0", message = "Стоимость не может быть отрицательной")
     private Long cost;
 
     @NotBlank(message = "Регион не может быть пустым")
     @Pattern(regexp = """
-            Республика\\sАдыгея |
+             Республика\\sАдыгея |
              Республика\\sАлтай |
              Республика\\sБашкортостан |
              Республика\\sБурятия |
@@ -106,9 +111,16 @@ public class BidRequestEdit {
              Ненецкий\\sАО |
              Ханты-Мансийский\\sАО |
              Чукотский\\sАО |
-             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS, message = "Неверное название региона")
+             Ямало-Ненецкий\\sАО""", flags = Pattern.Flag.COMMENTS,
+            message = "Неверное название региона")
     private String region;
 
-    @NotNull(message = "предположительные сроки выполнения")
+    @NotNull(message = "ID организации не может быть пустым")
+    private UUID organizationId;
+
+    @NotNull(message = "ID создателя не может быть пустым")
+    private UUID ownerID;
+
+    @NotNull(message = "сроки выполнения")
     private LocalDateTime expiredAt;
 }

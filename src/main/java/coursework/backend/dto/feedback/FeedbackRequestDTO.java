@@ -1,4 +1,4 @@
-package coursework.backend.dto;
+package coursework.backend.dto.feedback;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

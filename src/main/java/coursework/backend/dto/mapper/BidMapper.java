@@ -1,6 +1,6 @@
 package coursework.backend.dto.mapper;
 
-import coursework.backend.dto.BidResponseDTO;
+import coursework.backend.dto.bid.BidResponseDTO;
 import coursework.backend.entity.Bid;
 import coursework.backend.entity.BidHistory;
 
@@ -25,12 +25,12 @@ public class BidMapper {
     }
 
 
-    public static void historyToEntity(Bid bid, BidHistory BidHistory) {
-        bid.setName(BidHistory.getName());
-        bid.setDescription(BidHistory.getDescription());
-        bid.setCost(BidHistory.getCost());
-        bid.setRegion(BidHistory.getRegion());
-        bid.setExpiredAt(BidHistory.getExpiredAt());
-        bid.setBidStatus(BidHistory.getBidStatus());
+    public static void historyToEntity(Bid bid, BidHistory bidHistory) {
+        bid.setName(bidHistory.getName());
+        bid.setDescription(bidHistory.getDescription());
+        bid.setCost(bidHistory.getCost());
+        bid.setRegion(bidHistory.getRegion());
+        bid.setExpiredAt(bidHistory.getExpiredAt());
+        bid.setBidStatus(bidHistory.getBidStatus());
     }
 }

@@ -1,12 +1,13 @@
 package coursework.backend.dto.mapper;
 
-import coursework.backend.dto.TenderResponseDTO;
+import coursework.backend.dto.tender.TenderResponseDTO;
 import coursework.backend.entity.Tender;
 import coursework.backend.entity.TenderHistory;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TenderMapper {
+    private TenderMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static TenderResponseDTO toDto(Tender tender) {
         return TenderResponseDTO.builder()

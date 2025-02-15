@@ -1,9 +1,9 @@
 package coursework.backend.service;
 
 
-import coursework.backend.dto.TenderRequestDTO;
-import coursework.backend.dto.TenderRequestEdit;
-import coursework.backend.dto.TenderResponseDTO;
+import coursework.backend.dto.tender.TenderRequestDTO;
+import coursework.backend.dto.tender.TenderRequestEdit;
+import coursework.backend.dto.tender.TenderResponseDTO;
 import coursework.backend.dto.mapper.TenderMapper;
 import coursework.backend.entity.Tender;
 import coursework.backend.entity.enums.EmployeePositionInOrganization;

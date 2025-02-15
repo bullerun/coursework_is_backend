@@ -72,7 +72,6 @@ public class GlobalExceptionHandler {
                     String field = (error.getCodes() != null && error.getCodes().length > 1)
                             ? error.getCodes()[1].split("\\.")[1]
                             : "unknownField";
-                    System.out.println(Arrays.toString(error.getCodes()));
                     fieldErrors.append(field)
                             .append(": ")
                             .append(error.getDefaultMessage())

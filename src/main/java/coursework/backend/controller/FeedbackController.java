@@ -1,7 +1,7 @@
 package coursework.backend.controller;
 
-import coursework.backend.dto.FeedbackRequestDTO;
-import coursework.backend.dto.FeedbackResponseDTO;
+import coursework.backend.dto.feedback.FeedbackRequestDTO;
+import coursework.backend.dto.feedback.FeedbackResponseDTO;
 import coursework.backend.service.BidService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

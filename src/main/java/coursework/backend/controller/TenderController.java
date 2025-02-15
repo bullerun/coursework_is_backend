@@ -1,9 +1,9 @@
 package coursework.backend.controller;
 
 import coursework.backend.dto.ErrorResponse;
-import coursework.backend.dto.TenderRequestDTO;
-import coursework.backend.dto.TenderRequestEdit;
-import coursework.backend.dto.TenderResponseDTO;
+import coursework.backend.dto.tender.TenderRequestDTO;
+import coursework.backend.dto.tender.TenderRequestEdit;
+import coursework.backend.dto.tender.TenderResponseDTO;
 import coursework.backend.entity.enums.TenderStatus;
 import coursework.backend.service.TenderService;
 import io.swagger.v3.oas.annotations.Operation;

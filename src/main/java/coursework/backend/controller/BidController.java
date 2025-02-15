@@ -1,8 +1,8 @@
 package coursework.backend.controller;
 
-import coursework.backend.dto.BidRequestCreate;
-import coursework.backend.dto.BidRequestEdit;
-import coursework.backend.dto.BidResponseDTO;
+import coursework.backend.dto.bid.BidRequestCreate;
+import coursework.backend.dto.bid.BidRequestEdit;
+import coursework.backend.dto.bid.BidResponseDTO;
 import coursework.backend.dto.ErrorResponse;
 import coursework.backend.entity.enums.BidStatus;
 import coursework.backend.service.BidService;
@@ -90,10 +90,10 @@ public class BidController {
 
     @Operation(
             summary = "Rollback bid version",
-            description = "Откатить параметры предложения к указанной версии. Это считается новой правкой, поэтому версия инкрементируется.",
+            description = "Откатить параметры предложения к указанной версии. Это считается новой правкой, поэтому версия инкриминируется.",
             security = @SecurityRequirement(name = "JWT"),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Предложение успешно откатано и версия инкрементирована."),
+                    @ApiResponse(responseCode = "200", description = "Предложение успешно откатано и версия инкриминируется."),
                     @ApiResponse(responseCode = "400", description = "Неверный формат запроса или его параметры."),
                     @ApiResponse(responseCode = "401", description = "Пользователь не существует или некорректен."),
                     @ApiResponse(responseCode = "403", description = "Недостаточно прав для выполнения действия."),

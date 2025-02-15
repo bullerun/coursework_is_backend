@@ -1,6 +1,10 @@
 package coursework.backend.service;
 
-import coursework.backend.dto.*;
+import coursework.backend.dto.bid.BidRequestCreate;
+import coursework.backend.dto.bid.BidRequestEdit;
+import coursework.backend.dto.bid.BidResponseDTO;
+import coursework.backend.dto.feedback.FeedbackRequestDTO;
+import coursework.backend.dto.feedback.FeedbackResponseDTO;
 import coursework.backend.dto.mapper.BidMapper;
 import coursework.backend.dto.mapper.FeedbackMapper;
 import coursework.backend.entity.Bid;

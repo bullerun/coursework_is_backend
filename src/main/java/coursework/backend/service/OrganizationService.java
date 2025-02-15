@@ -1,8 +1,8 @@
 package coursework.backend.service;
 
-import coursework.backend.dto.OrganizationInvitesResponse;
+import coursework.backend.dto.organization.OrganizationInvitesResponse;
 import coursework.backend.dto.organization.InviteRequest;
-import coursework.backend.dto.organization.OrganizationMapper;
+import coursework.backend.dto.mapper.OrganizationMapper;
 import coursework.backend.dto.organization.OrganizationRequestDTO;
 import coursework.backend.entity.*;
 import coursework.backend.entity.enums.EmployeePositionInOrganization;

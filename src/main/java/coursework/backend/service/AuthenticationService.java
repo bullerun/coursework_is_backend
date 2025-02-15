@@ -2,9 +2,9 @@ package coursework.backend.service;
 
 
 import coursework.backend.authentication.service.JwtService;
-import coursework.backend.dto.JwtAuthenticationResponse;
-import coursework.backend.dto.SignInRequest;
-import coursework.backend.dto.SignUpRequest;
+import coursework.backend.dto.auth.JwtAuthenticationResponse;
+import coursework.backend.dto.auth.SignInRequest;
+import coursework.backend.dto.auth.SignUpRequest;
 import coursework.backend.entity.User;
 import coursework.backend.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
