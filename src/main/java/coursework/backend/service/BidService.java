@@ -3,18 +3,13 @@ package coursework.backend.service;
 import coursework.backend.dto.bid.BidRequestCreate;
 import coursework.backend.dto.bid.BidRequestEdit;
 import coursework.backend.dto.bid.BidResponseDTO;
+import coursework.backend.dto.feedback.FeedbackDecisionDTO;
 import coursework.backend.dto.feedback.FeedbackRequestDTO;
 import coursework.backend.dto.feedback.FeedbackResponseDTO;
 import coursework.backend.dto.mapper.BidMapper;
 import coursework.backend.dto.mapper.FeedbackMapper;
-import coursework.backend.entity.Bid;
-import coursework.backend.entity.BidHistory;
-import coursework.backend.entity.Feedback;
-import coursework.backend.entity.Organization;
-import coursework.backend.entity.enums.AuthorType;
-import coursework.backend.entity.enums.BidStatus;
-import coursework.backend.entity.enums.FeedbackStatus;
-import coursework.backend.entity.enums.TenderStatus;
+import coursework.backend.entity.*;
+import coursework.backend.entity.enums.*;
 import coursework.backend.exception.ForbiddenException;
 import coursework.backend.exception.NotFoundException;
 import coursework.backend.repository.*;
@@ -172,5 +167,30 @@ public class BidService {
                 .stream()
                 .map(FeedbackMapper::toDto)
                 .toList();
+    }
+
+    @Transactional
+    public String processFeedbackDecision(UUID bidId, @Valid FeedbackDecisionDTO decision) {
+        Bid bid = bidRepository.findById(bidId)
+                .orElseThrow(() -> new IllegalArgumentException("Bid not found"));
+
+        Tender tender = bid.getTender();
+
+        if (decision.getDecision() == Decision.APPROVE) {
+            tender.setTenderStatus(TenderStatus.CLOSED);
+            tenderRepository.save(tender);
+
+            bid.setBidStatus(BidStatus.APPROVED);
+            bidRepository.save(bid);
+
+
+            List<Bid> otherBids = bidRepository.findByTenderIdAndIdNot(tender.getId(), bidId);
+            for (Bid otherBid : otherBids) {
+                otherBid.setBidStatus(BidStatus.CLOSED);
+                bidRepository.save(otherBid);
+            }
+        }
+
+        return "tender has been closed";
     }
 }

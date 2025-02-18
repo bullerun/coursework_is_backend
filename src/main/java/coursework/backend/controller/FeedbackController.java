@@ -1,6 +1,7 @@
 package coursework.backend.controller;
 
 import coursework.backend.dto.ErrorResponse;
+import coursework.backend.dto.feedback.FeedbackDecisionDTO;
 import coursework.backend.dto.feedback.FeedbackRequestDTO;
 import coursework.backend.dto.feedback.FeedbackResponseDTO;
 import coursework.backend.service.BidService;
@@ -91,5 +92,27 @@ public class FeedbackController {
     )
     public ResponseEntity<List<FeedbackResponseDTO>> getApprovedFeedbacks(@PathVariable UUID bidId) {
         return ResponseEntity.ok(bidService.getApprovedFeedbacks(bidId));
+    }
+
+    @PostMapping(value = "/{bidId}/decision", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Submit decision on feedback",
+            description = "Approve or reject feedback for a given Bid ID",
+            security = @SecurityRequirement(name = "JWT"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Decision processed successfully",
+                            content = @Content(schema = @Schema(implementation = FeedbackResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid request data",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Bid or feedback not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "User does not exist or is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Insufficient permissions.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    public ResponseEntity<String> submitDecision(@PathVariable UUID bidId, @Valid @RequestBody FeedbackDecisionDTO decision) {
+        return ResponseEntity.ok(bidService.processFeedbackDecision(bidId, decision));
     }
 }

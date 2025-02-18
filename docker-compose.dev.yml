@@ -12,7 +12,6 @@ services:
     volumes:
       - postgresql_data:/var/lib/postgres/data
     environment:
-      - PGPORT=5432
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

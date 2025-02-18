@@ -53,4 +53,5 @@ public interface BidRepository extends JpaRepository<Bid, UUID> {
             """)
     Optional<Bid> findBidWithPermission(@Param("bidId") UUID bidId, @Param("userId") UUID userId);
 
+    List<Bid> findByTenderIdAndIdNot(UUID id, UUID bidId);
 }

@@ -18,7 +18,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
-    private final UserRepository userRepository;
     private final KafkaProducerService kafkaProducerService;
 
     public User save(User user) {
@@ -52,14 +51,11 @@ public class UserService {
     }
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(
+        return repository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("User not found.")
         );
     }
 
-    public UUID getCurrentUserId() {
-        return getCurrentUser().getId();
-    }
 
     public void setRole(UUID id, Role role) {
         repository.updateRole(id, role);
