@@ -28,6 +28,9 @@ public class UserService {
         if (repository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("User with this username already exists.");
         }
+        if (repository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("User with this email already exists.");
+        }
         user = save(user);
         kafkaProducerService.sendLog("User created: " + user);
         return user;

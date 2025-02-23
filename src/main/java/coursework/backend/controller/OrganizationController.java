@@ -164,5 +164,10 @@ public class OrganizationController {
     public ResponseEntity<String> updateRole(@RequestBody @Valid InviteRequest request) {
         return ResponseEntity.ok(organizationService.updateRole(request));
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<Organization>> getMy(){
+        return ResponseEntity.ok(organizationService.getMyOrganizations());
+    }
 }
 

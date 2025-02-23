@@ -131,4 +131,7 @@ public class OrganizationService {
         throw new ForbiddenException("you are not head");
     }
 
+    public List<Organization> getMyOrganizations() {
+        return organisationEmployeeRepository.findOrganizationByEmployeeUsername(userService.getCurrentUserUsername());
+    }
 }

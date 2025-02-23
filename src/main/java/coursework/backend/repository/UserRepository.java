@@ -44,4 +44,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "WHERE u.username = :username AND o.id = :organizationUuid")
     boolean existsByUserAndOrganization(@Param("username") String username,
                                         @Param("organizationUuid") UUID organizationUuid);
+
+    boolean existsByEmail(String email);
 }
